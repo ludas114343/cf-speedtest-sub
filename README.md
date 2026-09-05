@@ -1,4 +1,4 @@
-# Network Sync & Diagnostic Utility
+# Network Sync and Diagnostic Utility
 
 A lightweight, automated multi-region network diagnostic and routing optimization pipeline.
 
@@ -15,6 +15,6 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 
 ## Status
 
-- Total active balanced regional routes: 28
+- Total active balanced regional routes: 26
 - Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
-- Hong Kong & Singapore: Excluded per user policy
+- Hong Kong and Singapore: Excluded per user policy
