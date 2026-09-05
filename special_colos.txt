@@ -1,0 +1,25 @@
+# Known seed IPs for cold/regional colos (Macau, Switzerland, Luxembourg, etc.)
+# MFM - Macau
+104.16.12.22
+104.18.23.45
+172.67.180.12
+# LUX - Luxembourg
+104.16.14.88
+104.18.35.19
+172.67.150.33
+# ZRH / GVA - Switzerland
+104.16.50.10
+104.18.42.66
+172.67.165.77
+# CDG - France
+104.16.60.25
+104.18.55.90
+# SYD / MEL - Australia
+104.16.70.35
+104.18.80.44
+# YYZ / YVR - Canada
+104.16.90.15
+104.18.95.82
+# ICN - South Korea
+104.16.105.30
+104.18.110.60

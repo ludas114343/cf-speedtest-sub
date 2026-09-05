@@ -1,0 +1,52 @@
+﻿name: Cloudflare Multi-Region Speed Test
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  speedtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download & Install CloudflareSpeedTest
+        run: |
+          CFST_VERSION="v2.3.4"
+          wget -q https://github.com/XIU2/CloudflareSpeedTest/releases/download/${CFST_VERSION}/cfst_linux_amd64.tar.gz
+          tar -zxf cfst_linux_amd64.tar.gz
+          chmod +x cfst
+
+      - name: Prepare Test IPs
+        run: |
+          cat ip.txt > test_ips.txt
+          if [ -f special_colos.txt ]; then
+            grep -v '^#' special_colos.txt | grep -v '^$' >> test_ips.txt
+          fi
+
+      - name: Execute Multi-Region Speed Test
+        run: |
+          COLOS="MFM,LUX,ZRH,GVA,CDG,MRS,FRA,AMS,DUB,LHR,SYD,MEL,AKL,YYZ,YVR,ICN,NRT,KIX,SIN,HKG,TPE,LAX,SJC,IAD"
+          echo "Starting CloudflareST with colos: $COLOS"
+          ./cfst -f test_ips.txt -httping -cfcolo "$COLOS" -tl 350 -tlr 0.2 -dn 30 -dt 5 -p 0 -o result.csv || true
+
+      - name: Process & Filter Top Regional Nodes
+        run: |
+          python process_results.py result.csv
+
+      - name: Commit and Push Updates
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add addressesapi.txt README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): update preferred multi-region nodes [skip ci]" && git push)
