@@ -36,8 +36,9 @@ jobs:
 
       - name: Execute Multi-Region Speed Test
         run: |
-          COLOS="MFM,LUX,ZRH,GVA,CDG,MRS,FRA,AMS,DUB,LHR,SYD,MEL,AKL,YYZ,YVR,ICN,NRT,KIX,SIN,HKG,TPE,LAX,SJC,IAD"
-          echo "Starting CloudflareST with colos: $COLOS"
+          # Target Colos: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, Ireland, UK, Spain, Italy, Austria, Belgium, Sweden, Poland, Czech, Portugal, Australia, New Zealand, Canada, Korea, Japan, US (Strictly NO HKG, NO SIN)
+          COLOS="MFM,LUX,ZRH,GVA,CDG,MRS,FRA,AMS,DUB,LHR,MAD,MXP,VIE,BRU,ARN,WAW,PRG,LIS,SYD,MEL,AKL,YYZ,YVR,ICN,NRT,KIX,LAX,SJC,IAD"
+          echo "Starting CloudflareST across European & Special Colos: $COLOS"
           ./cfst -f test_ips.txt -httping -cfcolo "$COLOS" -tl 350 -tlr 0.2 -dn 30 -dt 5 -p 0 -o result.csv || true
 
       - name: Process & Filter Top Regional Nodes
