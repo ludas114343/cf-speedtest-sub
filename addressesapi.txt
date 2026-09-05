@@ -1,28 +1,37 @@
-104.16.12.22:443#🇲🇴 澳门 [MFM] 18.5M 64ms
-172.67.180.12:443#🇲🇴 澳门 [MFM] 16.8M 68ms
-104.16.50.10:443#🇨🇭 瑞士苏黎世 [ZRH] 19.2M 162ms
-104.18.42.66:443#🇨🇭 瑞士苏黎世 [ZRH] 17.4M 165ms
-104.16.50.25:443#🇨🇭 瑞士日内瓦 [GVA] 15.9M 168ms
-172.67.150.33:443#🇱🇺 卢森堡 [LUX] 15.2M 174ms
-104.16.14.88:443#🇱🇺 卢森堡 [LUX] 14.8M 172ms
-104.16.60.25:443#🇫🇷 法国巴黎 [CDG] 20.1M 158ms
-104.18.55.90:443#🇫🇷 法国马赛 [MRS] 18.7M 161ms
-104.16.170.90:443#🇩🇪 德国法兰克福 [FRA] 20.3M 162ms
-104.16.175.95:443#🇳🇱 荷兰阿姆斯特丹 [AMS] 19.5M 165ms
-104.16.180.99:443#🇮🇪 爱尔兰都柏林 [DUB] 19.0M 170ms
-104.16.185.10:443#🇬🇧 英国伦敦 [LHR] 18.2M 166ms
-104.16.190.20:443#🇪🇸 西班牙马德里 [MAD] 17.8M 175ms
-104.16.195.30:443#🇮🇹 意大利米兰 [MXP] 18.0M 172ms
-104.16.200.40:443#🇦🇹 奥地利维也纳 [VIE] 17.5M 168ms
-104.16.205.50:443#🇧🇪 比利时布鲁塞尔 [BRU] 19.1M 164ms
-104.16.210.60:443#🇸🇪 瑞典斯德哥尔摩 [ARN] 18.6M 178ms
-104.16.215.70:443#🇵🇱 波兰华沙 [WAW] 17.0M 176ms
-104.16.220.80:443#🇨🇿 捷克布拉格 [PRG] 17.3M 171ms
-104.16.225.90:443#🇵🇹 葡萄牙里斯本 [LIS] 16.9M 182ms
-104.16.70.35:443#🇦🇺 澳大利亚悉尼 [SYD] 18.4M 185ms
-104.18.80.44:443#🇦🇺 澳大利亚墨尔本 [MEL] 17.2M 189ms
-104.16.92.15:443#🇳🇿 新西兰奥克兰 [AKL] 14.9M 205ms
-104.16.90.15:443#🇨🇦 加拿大多伦多 [YYZ] 22.0M 175ms
-104.18.95.82:443#🇨🇦 加拿大温哥华 [YVR] 21.5M 148ms
-104.16.105.30:443#🇰🇷 韩国首尔 [ICN] 28.4M 42ms
-104.16.120.40:443#🇯🇵 日本东京 [NRT] 31.2M 61ms
+# --- Domestic Clean Anycast IPs (三网国内低延迟优选入口) ---
+91.193.59.215:443#移动优选
+104.17.96.132:443#移动优选
+172.66.3.38:443#移动优选
+104.17.59.150:443#移动优选
+104.26.13.90:443#联通优选
+104.26.9.205:443#联通优选
+
+# --- Regional Preferred Nodes (各地区真实ProxyIP落地) ---
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@91.193.59.215:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.202.247.198%3A443%26ed%3D2048#%F0%9F%87%B2%F0%9F%87%B4%20%E6%BE%B3%E9%97%A8-01%20%7C%20YouTube%E5%85%8D%E5%B9%BF%E5%91%8A
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.96.132:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.64.22.22%3A443%26ed%3D2048#%F0%9F%87%B2%F0%9F%87%B4%20%E6%BE%B3%E9%97%A8-02%20%7C%20YouTube%E5%85%8D%E5%B9%BF%E5%91%8A
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.66.3.38:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D179.237.87.154%3A443%26ed%3D2048#%F0%9F%87%A8%F0%9F%87%AD%20%E7%91%9E%E5%A3%AB-01%20%7C%20%E9%9A%90%E7%A7%81%E4%B8%AD%E7%AB%8B
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.59.150:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D151.158.1.131%3A443%26ed%3D2048#%F0%9F%87%A8%F0%9F%87%AD%20%E7%91%9E%E5%A3%AB-02%20%7C%20%E9%9A%90%E7%A7%81%E4%B8%AD%E7%AB%8B
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.26.13.90:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D107.189.14.180%3A443%26ed%3D2048#%F0%9F%87%B1%F0%9F%87%BA%20%E5%8D%A2%E6%A3%AE%E5%A0%A1-01%20%7C%20%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.26.9.205:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D107.189.28.253%3A443%26ed%3D2048#%F0%9F%87%B1%F0%9F%87%BA%20%E5%8D%A2%E6%A3%AE%E5%A0%A1-02%20%7C%20%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.67.64.167:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D147.90.26.87%3A443%26ed%3D2048#%F0%9F%87%AB%F0%9F%87%B7%20%E6%B3%95%E5%9B%BD-01%20%7C%20%E5%B7%B4%E9%BB%8E%E6%AC%A7%E6%B4%B2%E6%A0%B8%E5%BF%83
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.67.72.110:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D51.91.40.26%3A443%26ed%3D2048#%F0%9F%87%AB%F0%9F%87%B7%20%E6%B3%95%E5%9B%BD-02%20%7C%20%E5%B7%B4%E9%BB%8E%E6%AC%A7%E6%B4%B2%E6%A0%B8%E5%BF%83
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@188.164.248.60:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D92.5.12.76%3A443%26ed%3D2048#%F0%9F%87%A9%F0%9F%87%AA%20%E5%BE%B7%E5%9B%BD-01%20%7C%20%E6%B3%95%E5%85%B0%E5%85%8B%E7%A6%8F%E9%AA%A8%E5%B9%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.66.0.59:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D64.188.66.138%3A2053%26ed%3D2048#%F0%9F%87%A9%F0%9F%87%AA%20%E5%BE%B7%E5%9B%BD-02%20%7C%20%E6%B3%95%E5%85%B0%E5%85%8B%E7%A6%8F%E9%AA%A8%E5%B9%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.18.33.20:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D147.90.229.234%3A443%26ed%3D2048#%F0%9F%87%B3%F0%9F%87%B1%20%E8%8D%B7%E5%85%B0-01%20%7C%20%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@8.35.211.154:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D144.124.237.204%3A443%26ed%3D2048#%F0%9F%87%B3%F0%9F%87%B1%20%E8%8D%B7%E5%85%B0-02%20%7C%20%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@91.193.59.215:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D57.128.176.82%3A8443%26ed%3D2048#%F0%9F%87%AC%F0%9F%87%A7%20%E8%8B%B1%E5%9B%BD-01%20%7C%20%E4%BC%A6%E6%95%A6%E8%8A%82%E7%82%B9
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.96.132:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D57.128.183.59%3A443%26ed%3D2048#%F0%9F%87%AC%F0%9F%87%A7%20%E8%8B%B1%E5%9B%BD-02%20%7C%20%E4%BC%A6%E6%95%A6%E8%8A%82%E7%82%B9
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.66.3.38:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D64.188.81.49%3A443%26ed%3D2048#%F0%9F%87%B8%F0%9F%87%AA%20%E7%91%9E%E5%85%B8-01%20%7C%20%E6%96%AF%E5%BE%B7%E5%93%A5%E5%B0%94%E6%91%A9%E5%8C%97%E6%AC%A7
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.59.150:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.80.231.90%3A443%26ed%3D2048#%F0%9F%87%B8%F0%9F%87%AA%20%E7%91%9E%E5%85%B8-02%20%7C%20%E6%96%AF%E5%BE%B7%E5%93%A5%E5%B0%94%E6%91%A9%E5%8C%97%E6%AC%A7
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.26.13.90:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.194.66.88%3A443%26ed%3D2048#%F0%9F%87%B5%F0%9F%87%B1%20%E6%B3%A2%E5%85%B0-01%20%7C%20%E5%8D%8E%E6%B2%99%E4%B8%9C%E6%AC%A7%E9%AA%A8%E5%B9%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.26.9.205:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D37.252.6.119%3A443%26ed%3D2048#%F0%9F%87%B5%F0%9F%87%B1%20%E6%B3%A2%E5%85%B0-02%20%7C%20%E5%8D%8E%E6%B2%99%E4%B8%9C%E6%AC%A7%E9%AA%A8%E5%B9%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.67.64.167:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D158.180.5.171%3A443%26ed%3D2048#%F0%9F%87%A6%F0%9F%87%BA%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A-01%20%7C%20%E6%82%89%E5%B0%BC%E5%A4%A7%E6%B4%8B%E6%B4%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.67.72.110:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D149.28.171.207%3A443%26ed%3D2048#%F0%9F%87%A6%F0%9F%87%BA%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A-02%20%7C%20%E6%82%89%E5%B0%BC%E5%A4%A7%E6%B4%8B%E6%B4%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@188.164.248.60:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.133.17.118%3A8443%26ed%3D2048#%F0%9F%87%A8%F0%9F%87%A6%20%E5%8A%A0%E6%8B%BF%E5%A4%A7-01%20%7C%20%E6%B8%A9%E5%93%A5%E5%8D%8E%E5%8C%97%E7%BE%8E%E7%9B%B4%E8%BF%9E
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.66.0.59:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D45.133.17.118%3A2083%26ed%3D2048#%F0%9F%87%A8%F0%9F%87%A6%20%E5%8A%A0%E6%8B%BF%E5%A4%A7-02%20%7C%20%E6%B8%A9%E5%93%A5%E5%8D%8E%E5%8C%97%E7%BE%8E%E7%9B%B4%E8%BF%9E
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.18.33.20:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D160.16.123.110%3A443%26ed%3D2048#%F0%9F%87%AF%F0%9F%87%B5%20%E6%97%A5%E6%9C%AC-01%20%7C%20%E4%B8%9C%E4%BA%AC%E9%AB%98%E9%80%9F%E4%BA%9A%E5%A4%AA
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@8.35.211.154:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D64.83.40.108%3A443%26ed%3D2048#%F0%9F%87%AF%F0%9F%87%B5%20%E6%97%A5%E6%9C%AC-02%20%7C%20%E4%B8%9C%E4%BA%AC%E9%AB%98%E9%80%9F%E4%BA%9A%E5%A4%AA
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@91.193.59.215:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D123.111.169.70%3A2053%26ed%3D2048#%F0%9F%87%B0%F0%9F%87%B7%20%E9%9F%A9%E5%9B%BD-01%20%7C%20%E9%A6%96%E5%B0%94%E4%BD%8E%E5%BB%B6%E8%BF%9F
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.96.132:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D152.67.210.234%3A443%26ed%3D2048#%F0%9F%87%B0%F0%9F%87%B7%20%E9%9F%A9%E5%9B%BD-02%20%7C%20%E9%A6%96%E5%B0%94%E4%BD%8E%E5%BB%B6%E8%BF%9F
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@172.66.3.38:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D154.12.38.212%3A443%26ed%3D2048#%F0%9F%87%BA%F0%9F%87%B8%20%E7%BE%8E%E5%9B%BD-01%20%7C%20%E8%A5%BF%E9%9B%85%E5%9B%BE%E9%AA%A8%E5%B9%B2
+vless://30e9c5c8-ed28-4cd9-b008-dc67277f8b02@104.17.59.150:443?encryption=none&security=tls&sni=edgetunnel.pages.dev&type=ws&host=edgetunnel.pages.dev&path=/%3Fproxyip%3D95.182.94.210%3A443%26ed%3D2048#%F0%9F%87%BA%F0%9F%87%B8%20%E7%BE%8E%E5%9B%BD-02%20%7C%20%E8%A5%BF%E9%9B%85%E5%9B%BE%E9%AA%A8%E5%B9%B2

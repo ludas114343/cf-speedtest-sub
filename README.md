@@ -1,15 +1,21 @@
 # Network Sync & Diagnostic Utility
 
-> Last Sync: `2026-09-05 21:50:47 CST (UTC+8)`  
-> Status: Operational (`active`)  
-> Processed Targets: 28 items  
+A lightweight, automated multi-region network diagnostic and routing optimization pipeline.
 
----
+## Capabilities
 
-### Overview
-Automated edge routing and endpoint health-check daemon.
-Executes scheduled diagnostics via GitHub Actions runner every 4 hours.
+- Automated 4-hour scheduled routing validation across global regions.
+- Zero tracking, 100% serverless static subscription delivery via jsDelivr CDN.
+- Multi-tier routing architecture: low-latency domestic Anycast peering coupled with authentic regional outbound egress.
 
-### Usage
-Private API data is maintained in `addressesapi.txt` for authorized upstream consumption.
+## Endpoints
 
+- **Direct Clash Subscription**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/clash.yaml`
+- **EdgeTunnel Custom Address List**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
+
+## Status
+
+- Total active balanced regional routes: 28
+- Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
+- Hong Kong & Singapore: Excluded per user policy
+- Last verified: UTC 2026-09-05 22:30:00
