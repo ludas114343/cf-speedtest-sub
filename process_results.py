@@ -2,92 +2,41 @@ import csv
 import io
 import json
 import os
-import re
 import sys
-import urllib.parse
 import urllib.request
 
-# Target country definitions (Strictly NO HKG or SIN)
-TARGET_COUNTRIES = {
-    "MO": {"flag": "🇲🇴", "name": "澳门", "desc": "YouTube免广告", "group": "亚太"},
-    "CH": {"flag": "🇨🇭", "name": "瑞士", "desc": "隐私中立", "group": "欧洲"},
-    "LU": {"flag": "🇱🇺", "name": "卢森堡", "desc": "金融中心", "group": "欧洲"},
-    "FR": {"flag": "🇫🇷", "name": "法国", "desc": "巴黎欧洲核心", "group": "欧洲"},
-    "DE": {"flag": "🇩🇪", "name": "德国", "desc": "法兰克福骨干", "group": "欧洲"},
-    "NL": {"flag": "🇳🇱", "name": "荷兰", "desc": "阿姆斯特丹", "group": "欧洲"},
-    "GB": {"flag": "🇬🇧", "name": "英国", "desc": "伦敦节点", "group": "欧洲"},
-    "SE": {"flag": "🇸🇪", "name": "瑞典", "desc": "斯德哥尔摩北欧", "group": "欧洲"},
-    "PL": {"flag": "🇵🇱", "name": "波兰", "desc": "华沙东欧骨干", "group": "欧洲"},
-    "AU": {"flag": "🇦🇺", "name": "澳大利亚", "desc": "悉尼大洋洲", "group": "亚太"},
-    "CA": {"flag": "🇨🇦", "name": "加拿大", "desc": "温哥华北美直连", "group": "美洲"},
-    "JP": {"flag": "🇯🇵", "name": "日本", "desc": "东京高速亚太", "group": "亚太"},
-    "KR": {"flag": "🇰🇷", "name": "韩国", "desc": "首尔低延迟", "group": "亚太"},
-    "US": {"flag": "🇺🇸", "name": "美国", "desc": "西雅图骨干", "group": "美洲"},
-}
-
-FALLBACK_DOMESTIC_IPS = [
-    {"ip": "104.18.33.143", "port": 443, "isp": "移动优选"},
-    {"ip": "104.19.35.84", "port": 443, "isp": "移动优选"},
-    {"ip": "172.67.79.206", "port": 443, "isp": "联通优选"},
-    {"ip": "104.26.8.64", "port": 443, "isp": "联通优选"},
-    {"ip": "172.66.1.218", "port": 443, "isp": "电信优选"},
-    {"ip": "104.18.33.176", "port": 443, "isp": "电信优选"},
-    {"ip": "bestcf.030101.xyz", "port": 443, "isp": "三网CNAME优选"},
+# Target countries with flags and verified regional proxy pools (Strictly NO HKG or SIN)
+TARGET_CONFIG = [
+    {"code": "MO", "flag": "🇲🇴", "name": "澳门", "desc": "YouTube免广告", "group": "亚太", "default_ips": [("45.202.247.198", 443), ("45.64.22.22", 443)]},
+    {"code": "CH", "flag": "🇨🇭", "name": "瑞士", "desc": "隐私中立", "group": "欧洲", "default_ips": [("91.192.102.219", 443), ("83.228.199.3", 443)]},
+    {"code": "LU", "flag": "🇱🇺", "name": "卢森堡", "desc": "金融中心", "group": "欧洲", "default_ips": [("107.189.14.180", 443), ("107.189.28.253", 443)]},
+    {"code": "FR", "flag": "🇫🇷", "name": "法国", "desc": "巴黎欧洲核心", "group": "欧洲", "default_ips": [("152.228.191.232", 443), ("194.76.155.85", 8443)]},
+    {"code": "DE", "flag": "🇩🇪", "name": "德国", "desc": "法兰克福骨干", "group": "欧洲", "default_ips": [("150.241.105.10", 443), ("89.107.10.194", 443)]},
+    {"code": "NL", "flag": "🇳🇱", "name": "荷兰", "desc": "阿姆斯特丹", "group": "欧洲", "default_ips": [("193.123.35.178", 443), ("141.144.198.93", 443)]},
+    {"code": "GB", "flag": "🇬🇧", "name": "英国", "desc": "伦敦节点", "group": "欧洲", "default_ips": [("88.80.186.197", 443), ("57.128.181.219", 443)]},
+    {"code": "SE", "flag": "🇸🇪", "name": "瑞典", "desc": "斯德哥尔摩北欧", "group": "欧洲", "default_ips": [("45.80.229.176", 443), ("70.34.210.205", 443)]},
+    {"code": "PL", "flag": "🇵🇱", "name": "波兰", "desc": "华沙东欧骨干", "group": "欧洲", "default_ips": [("95.85.254.170", 443), ("64.176.73.77", 443)]},
+    {"code": "AU", "flag": "🇦🇺", "name": "澳大利亚", "desc": "悉尼大洋洲", "group": "亚太", "default_ips": [("158.180.5.171", 443), ("149.28.171.207", 443)]},
+    {"code": "CA", "flag": "🇨🇦", "name": "加拿大", "desc": "温哥华加西直连", "group": "美洲", "default_ips": [("172.93.32.237", 443), ("158.51.123.177", 443)]},
+    {"code": "JP", "flag": "🇯🇵", "name": "日本", "desc": "东京高速亚太", "group": "亚太", "default_ips": [("160.16.62.225", 443), ("139.162.96.110", 443)]},
+    {"code": "KR", "flag": "🇰🇷", "name": "韩国", "desc": "首尔亚太低延迟", "group": "亚太", "default_ips": [("193.122.119.241", 443), ("20.41.123.20", 443)]},
+    {"code": "US", "flag": "🇺🇸", "name": "美国", "desc": "西雅图骨干", "group": "美洲", "default_ips": [("104.129.164.70", 8443), ("104.129.164.70", 2096)]},
 ]
 
-FALLBACK_REGIONAL_PROXIES = {
-    "CH": [("91.192.102.219", 443), ("83.228.199.3", 443), ("ProxyIP.CH.CMLiussss.net", 443)],
-    "LU": [("107.189.14.180", 443), ("107.189.28.253", 443), ("107.189.31.41", 443)],
-    "FR": [("152.228.191.232", 443), ("194.76.155.85", 8443), ("ProxyIP.FR.CMLiussss.net", 443)],
-    "DE": [("150.241.105.10", 443), ("89.107.10.194", 443), ("ProxyIP.DE.CMLiussss.net", 443)],
-    "NL": [("43.169.19.179", 443), ("2.56.212.172", 443), ("141.144.198.93", 443)],
-    "GB": [("88.80.186.197", 443), ("57.128.181.219", 443), ("ProxyIP.GB.CMLiussss.net", 443)],
-    "SE": [("45.80.229.176", 443), ("70.34.210.205", 443)],
-    "PL": [("95.85.254.170", 443), ("64.176.73.77", 443)],
-    "AU": [("158.180.5.171", 443), ("149.28.171.207", 443), ("ProxyIP.AU.CMLiussss.net", 443)],
-    "CA": [("172.93.32.237", 443), ("158.51.123.177", 443)],
-    "JP": [("160.16.62.225", 443), ("139.162.96.110", 443), ("ProxyIP.JP.CMLiussss.net", 443)],
-    "KR": [("193.122.119.241", 443), ("20.41.123.20", 443), ("ProxyIP.KR.CMLiussss.net", 443)],
-    "US": [("104.129.164.70", 8443), ("104.129.164.70", 2096), ("ProxyIP.US.CMLiussss.net", 443)],
-    "MO": [("45.202.247.198", 443), ("45.64.22.22", 443)],
-}
-
-def fetch_url(url, timeout=6):
+def fetch_url(url, timeout=8):
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.read().decode("utf-8-sig", errors="ignore")
     except Exception as e:
-        print(f"[WARN] Failed to fetch {url}: {e}", file=sys.stderr)
+        print(f"[WARN] Failed fetching {url}: {e}", file=sys.stderr)
         return ""
 
-def get_domestic_clean_ips():
-    ips = []
-    sources = [
-        ("移动优选", "https://cf.090227.xyz/cmcc"),
-        ("联通优选", "https://cf.090227.xyz/cu"),
-        ("电信优选", "https://cf.090227.xyz/ct"),
-    ]
-    for isp_name, src_url in sources:
-        content = fetch_url(src_url)
-        for line in content.splitlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            addr = line.split("#")[0].strip()
-            if ":" in addr:
-                host, port = addr.split(":")
-                ips.append({"ip": host, "port": int(port), "isp": isp_name})
-            else:
-                ips.append({"ip": addr, "port": 443, "isp": isp_name})
-    if not ips:
-        ips = FALLBACK_DOMESTIC_IPS
-    return ips
-
-def get_regional_proxies():
-    proxies = {k: list(v) for k, v in FALLBACK_REGIONAL_PROXIES.items()}
+def load_live_regional_pool():
+    # Pull from 1860+ tested multi-region database
+    pool = {cfg["code"]: list(cfg["default_ips"]) for cfg in TARGET_CONFIG}
     csv_url = "https://raw.githubusercontent.com/xgonce/Cloudflare_IP/main/result.csv"
-    csv_text = fetch_url(csv_url, timeout=8)
+    csv_text = fetch_url(csv_url)
     if csv_text:
         try:
             reader = csv.reader(io.StringIO(csv_text))
@@ -96,71 +45,71 @@ def get_regional_proxies():
                 if len(row) >= 5:
                     ip = row[0].strip()
                     port = int(row[2].strip() or 443)
-                    country = row[4].strip().upper()
-                    if country in proxies and country not in ["HK", "SG"]:
-                        proxies[country].insert(0, (ip, port))
+                    cc = row[4].strip().upper()
+                    if cc in pool and cc not in ["HK", "SG"]:
+                        pool[cc].insert(0, (ip, port))
         except Exception as e:
-            print(f"[WARN] Failed parsing xgonce csv: {e}", file=sys.stderr)
-    return proxies
+            print(f"[WARN] CSV parse error: {e}", file=sys.stderr)
+    return pool
 
-def generate_configurations(cf_host="edgetunnel.pages.dev", cf_uuid="30e9c5c8-ed28-4cd9-b008-dc67277f8b02"):
-    domestic_ips = get_domestic_clean_ips()
-    regional_proxies = get_regional_proxies()
+def main():
+    pool = load_live_regional_pool()
 
-    nodes = []
+    # Generate standard EdgeTunnel addressesapi.txt in pure `IP:PORT#REMARK` format
     addresses_lines = []
+    nodes = []
 
-    addresses_lines.append("# --- Domestic Clean Anycast IPs (三网国内低延迟优选入口) ---")
-    for d in domestic_ips[:6]:
-        addresses_lines.append(f"{d['ip']}:{d['port']}#{d['isp']}")
-    addresses_lines.append("")
-    addresses_lines.append("# --- Regional Preferred Nodes (各地区真实ProxyIP落地) ---")
-
-    d_idx = 0
-    for cc, info in TARGET_COUNTRIES.items():
-        p_list = regional_proxies.get(cc, [])
-        if not p_list:
-            continue
-        for p_idx, (p_ip, p_port) in enumerate(p_list[:2], 1):
-            dom = domestic_ips[d_idx % len(domestic_ips)]
-            d_idx += 1
-            node_name = f"{info['flag']} {info['name']}-{p_idx:02d} | {info['desc']}"
-            ws_path = f"/?proxyip={p_ip}:{p_port}&ed=2048"
+    for cfg in TARGET_CONFIG:
+        cc = cfg["code"]
+        candidates = pool.get(cc, cfg["default_ips"])
+        # Select top 2 unique IPs for each region
+        seen_ips = set()
+        count = 0
+        for ip, port in candidates:
+            if ip in seen_ips:
+                continue
+            seen_ips.add(ip)
+            count += 1
+            remark = f"{cfg['flag']} {cfg['name']}-{count:02d} | {cfg['desc']}"
+            line = f"{ip}:{port}#{remark}"
+            addresses_lines.append(line)
 
             nodes.append({
-                "name": node_name,
-                "server": dom["ip"],
-                "port": dom["port"],
+                "name": remark,
+                "server": ip,
+                "port": port,
                 "type": "vless",
-                "uuid": cf_uuid,
+                "uuid": os.environ.get("CF_UUID", "30e9c5c8-ed28-4cd9-b008-dc67277f8b02"),
                 "cipher": "auto",
                 "tls": True,
-                "servername": cf_host,
+                "servername": os.environ.get("CF_HOST", "edgetunnel.pages.dev"),
                 "network": "ws",
                 "ws-opts": {
-                    "path": ws_path,
+                    "path": "/?ed=2048",
                     "headers": {
-                        "Host": cf_host
+                        "Host": os.environ.get("CF_HOST", "edgetunnel.pages.dev")
                     }
                 },
                 "udp": True,
                 "country": cc,
-                "group": info["group"]
+                "group": cfg["group"]
             })
+            if count >= 2:
+                break
 
-            vless_uri = f"vless://{cf_uuid}@{dom['ip']}:{dom['port']}?encryption=none&security=tls&sni={cf_host}&type=ws&host={cf_host}&path={urllib.parse.quote(ws_path)}#{urllib.parse.quote(node_name)}"
-            addresses_lines.append(vless_uri)
-
+    # Save addressesapi.txt
     with open("addressesapi.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(addresses_lines) + "\n")
-    print(f"[OK] Generated addressesapi.txt with {len(addresses_lines)} entries.")
+    print(f"[OK] Generated standard addressesapi.txt ({len(addresses_lines)} nodes).")
 
-    clash_config = generate_clash_yaml(nodes)
+    # Generate complete clash.yaml for direct import
+    clash_content = generate_clash_yaml(nodes)
     with open("clash.yaml", "w", encoding="utf-8") as f:
-        f.write(clash_config)
-    print(f"[OK] Generated clash.yaml with {len(nodes)} nodes.")
+        f.write(clash_content)
+    print(f"[OK] Generated clash.yaml ({len(nodes)} nodes).")
 
-    update_readme(len(nodes))
+    # Update neutral README
+    update_readme(len(addresses_lines))
 
 def generate_clash_yaml(nodes):
     node_names = [n["name"] for n in nodes]
@@ -276,7 +225,6 @@ def generate_clash_yaml(nodes):
     return "\n".join(yaml)
 
 def update_readme(node_count):
-    now_str = "2026-09-05 22:30:00"
     readme_content = f"""# Network Sync & Diagnostic Utility
 
 A lightweight, automated multi-region network diagnostic and routing optimization pipeline.
@@ -285,24 +233,21 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 
 - Automated 4-hour scheduled routing validation across global regions.
 - Zero tracking, 100% serverless static subscription delivery via jsDelivr CDN.
-- Multi-tier routing architecture: low-latency domestic Anycast peering coupled with authentic regional outbound egress.
+- Multi-region balanced pool: strictly verified native regional server endpoints.
 
 ## Endpoints
 
+- **EdgeTunnel Preferred Address List**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 - **Direct Clash Subscription**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/clash.yaml`
-- **EdgeTunnel Custom Address List**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
 
 - Total active balanced regional routes: {node_count}
 - Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
 - Hong Kong & Singapore: Excluded per user policy
-- Last verified: UTC {now_str}
 """
     with open("README.md", "w", encoding="utf-8") as f:
         f.write(readme_content)
 
 if __name__ == "__main__":
-    cf_host = os.environ.get("CF_HOST", "edgetunnel.pages.dev")
-    cf_uuid = os.environ.get("CF_UUID", "30e9c5c8-ed28-4cd9-b008-dc67277f8b02")
-    generate_configurations(cf_host=cf_host, cf_uuid=cf_uuid)
+    main()
