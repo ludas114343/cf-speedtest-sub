@@ -13,7 +13,7 @@ cf-speedtest-sub/
 │   └── workflows/
 │       └── speedtest.yml       # GitHub Actions 4小时自动测速与推送工作流
 ├── ip.txt                      # 官方 Anycast IP 段池
-├── special_colos.txt           # 澳门/瑞士/卢森堡/法国等特色地区种子池
+├── special_colos.txt           # 瑞士/卢森堡/法国等特色地区种子池
 ├── process_results.py          # 测速结果智能解析与 28 个多国节点均衡筛选脚本
 ├── sub_worker.js               # 优选订阅分发函数 (支持 Clash/VLESS/EdgeTunnel 纯文本)
 ├── addressesapi.txt            # 生成的标准优选列表 (供 EdgeTunnel ADDAPI 消费)
@@ -66,8 +66,6 @@ cf-speedtest-sub/
 
 本配置专门针对你的需求定制，精选 **28 个顶级节点**，覆盖：
 
-1. **🇲🇴 澳门专线 (MFM)**：
-   - **核心特权**：YouTube 在澳门地区不投放商业广告，使用澳门 IP 观看 YouTube 享受原生无广告体验！
 2. **🇨🇭 瑞士 (ZRH/GVA) & 🇱🇺 卢森堡 (LUX)**：
    - **中立与隐私特权**：欧洲金融与数据隐私法案保护区，极度冷门干净。
 3. **🇫🇷 法国 (CDG/MRS) & 🇩🇪 德国 (FRA) & 🇳🇱 荷兰 (AMS) & 🇮🇪 爱尔兰 (DUB)**：

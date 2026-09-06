@@ -16,7 +16,7 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 
 ## Status
 
-- Total active balanced regional routes: 31
+- Total active balanced regional routes: 32
 - Inbound: China Mainland and Asia-Optimized low-latency Cloudflare Anycast edge
-- Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
-- Hong Kong and Singapore: Excluded per user policy
+- Regions: Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
+- Macau, Hong Kong, and Singapore: Excluded per user policy

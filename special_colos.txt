@@ -1,9 +1,4 @@
-﻿# Special / Cold Colos Seed IP List (Focus on Macau & European Union & Oceania & Americas)
 # Excludes Hong Kong (HKG) and Singapore (SIN)
-
-# MFM - Macau (YouTube No Ads)
-104.16.12.22
-172.67.180.12
 
 # ZRH / GVA - Switzerland
 104.16.50.10

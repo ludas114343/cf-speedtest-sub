@@ -20,28 +20,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Download & Install CloudflareSpeedTest
-        run: |
-          CFST_VERSION="v2.3.4"
-          wget -q https://github.com/XIU2/CloudflareSpeedTest/releases/download/${CFST_VERSION}/cfst_linux_amd64.tar.gz
-          tar -zxf cfst_linux_amd64.tar.gz
-          chmod +x cfst
-
-      - name: Prepare Test IPs
-        run: |
-          cat ip.txt > test_ips.txt
-          if [ -f special_colos.txt ]; then
-            grep -v '^#' special_colos.txt | grep -v '^$' >> test_ips.txt
-          fi
-
-      - name: Execute Multi-Region Speed Test
-        run: |
-          # Target Colos: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, Ireland, UK, Spain, Italy, Austria, Belgium, Sweden, Poland, Czech, Portugal, Australia, New Zealand, Canada, Korea, Japan, US (Strictly NO HKG, NO SIN)
-          COLOS="MFM,LUX,ZRH,GVA,CDG,MRS,FRA,AMS,DUB,LHR,MAD,MXP,VIE,BRU,ARN,WAW,PRG,LIS,SYD,MEL,AKL,YYZ,YVR,ICN,NRT,KIX,LAX,SJC,IAD"
-          echo "Starting CloudflareST across European & Special Colos: $COLOS"
-          ./cfst -f test_ips.txt -httping -cfcolo "$COLOS" -tl 350 -tlr 0.2 -dn 30 -dt 5 -p 0 -o result.csv || true
-
-      - name: Process & Filter Top Regional Nodes
+      - name: Process and Validate Multi-Region Nodes
         run: |
           python process_results.py
 
