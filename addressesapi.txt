@@ -35,5 +35,5 @@
 185.71.230.237:443#🇳🇿 新西兰-01 | Auckland Redshield Security Limited
 172.237.60.225:443#🇧🇷 南美-巴西-01 | São Paulo Akamai Technologies, Inc.
 43.174.195.1:443#🇦🇷 南美-阿根廷-02 | 布宜诺斯艾利斯 Tencent Cloud
-38.54.64.204:443#🇿🇦 非洲-南非-01 | Johannesburg Kaopu Cloud HK Limited
-38.54.59.70:443#🇪🇬 非洲-埃及-02 | Cairo Kaopu Cloud HK Limited
+38.54.64.204:443#🇿🇦 非洲-南非-01 | Johannesburg Kaopu Cloud
+38.54.59.70:443#🇪🇬 非洲-埃及-02 | Cairo Kaopu Cloud

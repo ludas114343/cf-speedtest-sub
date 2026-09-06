@@ -7,7 +7,7 @@ Automated subscription feed for EdgeTunnel ADDAPI with real-time verification.
 - **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
-- **Last Updated**: `2026-09-06 09:29:04 UTC`
+- **Last Updated**: `2026-09-06 09:30:29 UTC`
 - **Coverage**: European Union / Europe (15 countries), Canada, Oceania (Australia, New Zealand), South America (2 nodes), Africa (2 nodes).
 - **Strictly BANNED**: ZERO US (美国), ZERO HK (香港), ZERO JP (日本), ZERO KR (韩国), ZERO CN (中国), ZERO SG (新加坡), ZERO MO (澳门), ZERO TW (台湾).
 - **Quality Standard**: ZERO Oracle Public Cloud (`AS31898`), verified TLS connectivity.
@@ -41,5 +41,5 @@ Automated subscription feed for EdgeTunnel ADDAPI with real-time verification.
 | 🇧🇷 南美-巴西 (`BR`) | `172.237.60.225:443` (São Paulo Akamai Technologies, Inc.) | - |
 | 🇦🇷 南美-阿根廷 (`AR`) | `43.174.195.1:443` (布宜诺斯艾利斯 Tencent Cloud) | - |
 | **🌍 非洲 (精选2节点)** | | |
-| 🇿🇦 非洲-南非 (`ZA`) | `38.54.64.204:443` (Johannesburg Kaopu Cloud HK Limited) | - |
-| 🇪🇬 非洲-埃及 (`EG`) | `38.54.59.70:443` (Cairo Kaopu Cloud HK Limited) | - |
+| 🇿🇦 非洲-南非 (`ZA`) | `38.54.64.204:443` (Johannesburg Kaopu Cloud) | - |
+| 🇪🇬 非洲-埃及 (`EG`) | `38.54.59.70:443` (Cairo Kaopu Cloud) | - |
