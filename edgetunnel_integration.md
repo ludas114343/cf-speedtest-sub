@@ -12,9 +12,7 @@ cf-speedtest-sub/
 ├── .github/
 │   └── workflows/
 │       └── speedtest.yml       # GitHub Actions 每 4 小时自动测速与推送工作流
-├── ip.txt                      # Cloudflare 官方 Anycast IP 段池
-├── special_colos.txt           # 瑞士、意大利、法国等特色 Anycast 种子池
-├── process_results.py          # 真实吞吐与延迟优选引擎 (筛选 13 国 26 个极速节点)
+├── build_sub.py                # 权威三网与13国纯净节点构建引擎 (剔除一切甲骨文与假公有云)
 ├── addressesapi.txt            # 生成的标准优选列表 (供 EdgeTunnel ADDAPI 消费)
 └── README.md                   # 实时节点测速排行榜 (每次自动测速后自动刷新)
 ```

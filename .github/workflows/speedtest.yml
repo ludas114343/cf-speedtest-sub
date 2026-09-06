@@ -22,7 +22,7 @@ jobs:
 
       - name: Process and Validate Multi-Region Nodes
         run: |
-          python process_results.py
+          python build_sub.py
 
       - name: Commit and Push Updates
         run: |
