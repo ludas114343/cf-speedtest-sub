@@ -1,30 +1,39 @@
-104.19.52.196:443#🇨🇳 移动优选-01 | 香港/广州低延迟骨干 (CMCC)
-104.17.220.222:443#🇨🇳 移动优选-02 | 香港/广州低延迟骨干 (CMCC)
-172.67.68.127:443#🇨🇳 联通优选-01 | 圣何塞/AS4837直连骨干 (CUCC)
-104.26.14.253:443#🇨🇳 联通优选-02 | 圣何塞/AS4837直连骨干 (CUCC)
-104.18.33.8:443#🇨🇳 电信优选-01 | 洛杉矶/163直连骨干 (CTCC)
-104.17.152.131:443#🇨🇳 电信优选-02 | 洛杉矶/163直连骨干 (CTCC)
-91.124.121.33:8443#🇨🇭 瑞士-01 | 苏黎世 Hostkey B.V.
-188.114.96.226:443#🇮🇹 意大利-01 | 米兰欧洲核心 (Cloudflare Europe)
-188.114.97.3:443#🇮🇹 意大利-02 | 米兰欧洲核心 (Cloudflare Europe)
-185.13.37.173:443#🇫🇷 法国-01 | Valenciennes Techcrea Solutions SAS
-217.60.252.106:443#🇫🇷 法国-02 | Paris CGI GLOBAL LIMITED
-138.124.93.139:443#🇩🇪 德国-01 | Frankfurt am Main Aeza International LTD
-152.53.229.84:443#🇩🇪 德国-02 | Nuremberg netcup GmbH
-82.196.13.153:443#🇳🇱 荷兰-01 | Amsterdam DigitalOcean, LLC
-146.185.141.14:443#🇳🇱 荷兰-02 | Amsterdam DigitalOcean, LLC
-134.209.185.10:443#🇬🇧 英国-01 | Slough DigitalOcean, LLC
-45.152.64.50:8443#🇬🇧 英国-02 | 伦敦 Lucidacloud
-176.124.202.130:2083#🇸🇪 瑞典-01 | Stockholm Aeza International LTD
-70.34.244.250:53062#🇵🇱 波兰-01 | Warsaw The Constant Company, LLC
-104.245.245.16:8443#🇵🇱 波兰-02 | Warsaw Tier.Net Technologies LLC
-104.18.80.44:443#🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 (Cloudflare Anycast)
-104.16.70.35:443#🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 (Cloudflare Anycast)
-103.214.69.199:443#🇨🇦 加拿大-01 | 蒙特利尔 YottaSrc
-38.49.212.71:8443#🇨🇦 加拿大-02 | 蒙特利尔 Rica Web Services
-23.27.169.196:443#🇯🇵 日本-01 | Tokyo Ace Data Centers II
-153.121.45.101:443#🇯🇵 日本-02 | Tokyo SAKURA Internet Inc.
-14.52.210.173:12138#🇰🇷 韩国-01 | Gangnam-gu Korea Telecom
-14.52.210.173:12312#🇰🇷 韩国-02 | Gangnam-gu Korea Telecom
-13.33.170.205:443#🇺🇸 美国-01 | New York Amazon.com, Inc.
-31.57.47.19:443#🇺🇸 美国-02 | Fremont CGI GLOBAL LIMITED
+64.227.75.250:443#🇳🇱 荷兰-01 | Amsterdam DigitalOcean, LLC
+177.3.212.122:443#🇳🇱 荷兰-02 | Amsterdam Play2go - Fzco
+185.248.86.218:443#🇬🇧 英国-01 | London xTom GmbH
+185.49.33.54:443#🇬🇧 英国-02 | London xTom GmbH
+176.126.70.158:443#🇸🇪 瑞典-01 | Stockholm HostHatch
+89.125.243.165:443#🇸🇪 瑞典-02 | Stockholm Baxet Group Inc.
+54.38.203.239:443#🇵🇱 波兰-01 | Warsaw OVH SAS
+82.22.40.129:2053#🇵🇱 波兰-02 | Warsaw Newserverlife LLC
+141.227.149.145:443#🇨🇭 瑞士-01 | Zurich OVH SAS
+179.43.156.121:443#🇨🇭 瑞士-02 | Rümlang Private Layer INC
+64.118.159.108:443#🇩🇪 德国-01 | Frankfurt am Main Eons Data Communications Limited
+178.22.26.180:443#🇩🇪 德国-02 | Frankfurt Am Main xTom GmbH
+94.183.188.90:443#🇫🇷 法国-01 | Paris CGI GLOBAL LIMITED
+185.157.245.44:443#🇫🇷 法国-02 | Nanterre Serverd SAS
+57.131.32.25:2053#🇮🇹 意大利-01 | Milan OVH SAS
+149.154.157.213:443#🇮🇹 意大利-02 | Milan M247 Europe SRL
+92.178.109.187:443#🇪🇸 西班牙-01 | Badalona UNI2-NET- Orange Spain Network
+185.114.72.31:2053#🇪🇸 西班牙-02 | Madrid First Server Limited
+5.144.181.41:443#🇫🇮 芬兰-01 | Helsinki Baykov Ilya Sergeevich
+85.204.18.93:443#🇫🇮 芬兰-02 | Helsinki Hostkey B.V.
+89.58.16.199:443#🇦🇹 奥地利-01 | Vienna netcup GmbH
+185.75.241.170:443#🇦🇹 奥地利-02 | Vienna Zayo Infrastructure France SA
+109.172.8.73:443#🇨🇿 捷克-01 | Veselí nad Lužnicí SmartApe OU
+109.172.9.242:443#🇨🇿 捷克-02 | Veselí nad Lužnicí SmartApe OU
+63.32.194.15:2053#🇮🇪 爱尔兰-01 | Dublin Amazon.com
+63.32.194.15:8443#🇮🇪 爱尔兰-02 | Dublin Amazon.com
+185.125.171.128:8443#🇳🇴 挪威-01 | Sandefjord TERRAHOST
+91.190.155.173:2083#🇳🇴 挪威-02 | Oslo HostHatch, LLC
+193.181.216.117:2053#🇩🇰 丹麦-01 | Asperup Webdock.io ApS
+193.180.209.21:443#🇩🇰 丹麦-02 | Nørre Åby Webdock.io ApS
+150.242.90.62:443#🇨🇦 加拿大-01 | Vancouver IT7 Networks Inc
+103.214.69.199:443#🇨🇦 加拿大-02 | Montreal YottaSrc
+139.84.205.230:443#🇦🇺 澳大利亚-01 | Melbourne The Constant Company, LLC
+45.32.191.198:443#🇦🇺 澳大利亚-02 | Sydney The Constant Company
+185.71.230.237:443#🇳🇿 新西兰-01 | Auckland Redshield Security Limited
+172.237.60.225:443#🇧🇷 南美-巴西-01 | São Paulo Akamai Technologies, Inc.
+43.174.195.1:443#🇦🇷 南美-阿根廷-02 | 布宜诺斯艾利斯 Tencent Cloud
+38.54.64.204:443#🇿🇦 非洲-南非-01 | Johannesburg Kaopu Cloud HK Limited
+38.54.59.70:443#🇪🇬 非洲-埃及-02 | Cairo Kaopu Cloud HK Limited
