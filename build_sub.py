@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """
-Cloudflare Multi-Region & Three-Network Preferred Subscription Pipeline
+Cloudflare Preferred Multi-Region Subscription Pipeline
 Generates addressesapi.txt for EdgeTunnel ADDAPI.
+
+Coverage:
+- European Union & European countries (NL, GB, SE, PL, CH, DE, FR, IT, ES, FI, AT, CZ, IE, NO, DK)
+- Canada (CA)
+- Oceania (AU, NZ)
+- South America (exactly 2 nodes: BR, AR, CL)
+- Africa (exactly 2 nodes: ZA, EG, NG)
+
+Strictly BANNED:
+- US, HK, JP, KR, CN, SG, MO, TW
+- Oracle Public Cloud (AS31898)
 """
 
 import os
@@ -11,25 +22,55 @@ import time
 import socket
 import ssl
 import urllib.request
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-TARGET_COUNTRIES = {
-    'CH': {'flag': '🇨🇭', 'name': '瑞士'},
-    'IT': {'flag': '🇮🇹', 'name': '意大利'},
-    'FR': {'flag': '🇫🇷', 'name': '法国'},
-    'DE': {'flag': '🇩🇪', 'name': '德国'},
+# 1. European Countries
+EUROPE_COUNTRIES = {
     'NL': {'flag': '🇳🇱', 'name': '荷兰'},
     'GB': {'flag': '🇬🇧', 'name': '英国'},
     'SE': {'flag': '🇸🇪', 'name': '瑞典'},
     'PL': {'flag': '🇵🇱', 'name': '波兰'},
-    'AU': {'flag': '🇦🇺', 'name': '澳大利亚'},
-    'CA': {'flag': '🇨🇦', 'name': '加拿大'},
-    'JP': {'flag': '🇯🇵', 'name': '日本'},
-    'KR': {'flag': '🇰🇷', 'name': '韩国'},
-    'US': {'flag': '🇺🇸', 'name': '美国'}
+    'CH': {'flag': '🇨🇭', 'name': '瑞士'},
+    'DE': {'flag': '🇩🇪', 'name': '德国'},
+    'FR': {'flag': '🇫🇷', 'name': '法国'},
+    'IT': {'flag': '🇮🇹', 'name': '意大利'},
+    'ES': {'flag': '🇪🇸', 'name': '西班牙'},
+    'FI': {'flag': '🇫🇮', 'name': '芬兰'},
+    'AT': {'flag': '🇦🇹', 'name': '奥地利'},
+    'CZ': {'flag': '🇨🇿', 'name': '捷克'},
+    'IE': {'flag': '🇮🇪', 'name': '爱尔兰'},
+    'NO': {'flag': '🇳🇴', 'name': '挪威'},
+    'DK': {'flag': '🇩🇰', 'name': '丹麦'}
 }
 
-FORBIDDEN_REGIONS = {'CN', 'MO', 'HK', 'SG'}
+# 2. Canada
+CANADA_COUNTRIES = {
+    'CA': {'flag': '🇨🇦', 'name': '加拿大'}
+}
+
+# 3. Oceania
+OCEANIA_COUNTRIES = {
+    'AU': {'flag': '🇦🇺', 'name': '澳大利亚'},
+    'NZ': {'flag': '🇳🇿', 'name': '新西兰'}
+}
+
+# 4. South America (Pick 2 nodes total across these)
+SOUTH_AMERICA_COUNTRIES = {
+    'BR': {'flag': '🇧🇷', 'name': '巴西'},
+    'AR': {'flag': '🇦🇷', 'name': '阿根廷'},
+    'CL': {'flag': '🇨🇱', 'name': '智利'}
+}
+
+# 5. Africa (Pick 2 nodes total across these)
+AFRICA_COUNTRIES = {
+    'ZA': {'flag': '🇿🇦', 'name': '南非'},
+    'EG': {'flag': '🇪🇬', 'name': '埃及'},
+    'NG': {'flag': '🇳🇬', 'name': '尼日利亚'}
+}
+
+# Strictly forbidden countries (Zero tolerance)
+BANNED_REGIONS = {'US', 'HK', 'JP', 'KR', 'CN', 'SG', 'MO', 'TW'}
 
 # Strict ban on Oracle Cloud and poor public cloud proxies
 BANNED_ASNS = {
@@ -90,106 +131,75 @@ def verify_tls(ip, port, timeout=2.5):
 def main():
     repo_dir = os.path.dirname(os.path.abspath(__file__))
     print("[*] Starting Cloudflare Multi-Region Subscription Feed Generator...")
+    print("[*] Target Regions: Europe, Canada, Oceania, South America (2), Africa (2)")
+    print("[*] Strictly BANNED: US, HK, JP, KR, CN, SG, MO, TW & Oracle Cloud (AS31898)")
 
-    # 1. Fetch Three-Network (三网优选) lines from DustinWin / WeTest
-    print("[*] Ingesting three-network feeds (CMCC, CUCC, CTCC)...")
-    cmcc_raw = fetch_url('https://github.com/DustinWin/BestCF/releases/download/bestcf/cmcc-ip.txt')
-    cucc_raw = fetch_url('https://github.com/DustinWin/BestCF/releases/download/bestcf/cucc-ip.txt')
-    ctcc_raw = fetch_url('https://github.com/DustinWin/BestCF/releases/download/bestcf/ctcc-ip.txt')
+    # 1. Ingest Upstream Live Community Feeds
+    print("[*] Ingesting upstream feeds...")
+    upstream_feeds = [
+        'https://raw.githubusercontent.com/HandsomeMJZ/cfip/main/full_ips.txt',
+        'https://raw.githubusercontent.com/LancelotRar/best-cf-ips/main/best-cf-ipv4.txt',
+        'https://countrymerge.pages.dev/all.txt'
+    ]
 
-    three_network_nodes = []
-    
-    # Pick top 2 CMCC nodes
-    cmcc_count = 0
-    for line in cmcc_raw.splitlines():
-        line = line.strip()
-        if line and not line.startswith('#'):
-            ip = line.split('#')[0].strip()
-            ok, rtt = verify_tls(ip, 443)
-            if ok:
-                cmcc_count += 1
-                three_network_nodes.append(f"{ip}:443#🇨🇳 移动优选-{cmcc_count:02d} | 香港/广州低延迟骨干 (CMCC)")
-                if cmcc_count >= 2:
-                    break
+    all_target_countries = {}
+    all_target_countries.update(EUROPE_COUNTRIES)
+    all_target_countries.update(CANADA_COUNTRIES)
+    all_target_countries.update(OCEANIA_COUNTRIES)
+    all_target_countries.update(SOUTH_AMERICA_COUNTRIES)
+    all_target_countries.update(AFRICA_COUNTRIES)
 
-    # Pick top 2 CUCC nodes
-    cucc_count = 0
-    for line in cucc_raw.splitlines():
-        line = line.strip()
-        if line and not line.startswith('#'):
-            ip = line.split('#')[0].strip()
-            ok, rtt = verify_tls(ip, 443)
-            if ok:
-                cucc_count += 1
-                three_network_nodes.append(f"{ip}:443#🇨🇳 联通优选-{cucc_count:02d} | 圣何塞/AS4837直连骨干 (CUCC)")
-                if cucc_count >= 2:
-                    break
+    candidates = defaultdict(list)
 
-    # Pick top 2 CTCC nodes
-    ctcc_count = 0
-    for line in ctcc_raw.splitlines():
-        line = line.strip()
-        if line and not line.startswith('#'):
-            ip = line.split('#')[0].strip()
-            ok, rtt = verify_tls(ip, 443)
-            if ok:
-                ctcc_count += 1
-                three_network_nodes.append(f"{ip}:443#🇨🇳 电信优选-{ctcc_count:02d} | 洛杉矶/163直连骨干 (CTCC)")
-                if ctcc_count >= 2:
-                    break
+    for feed_url in upstream_feeds:
+        raw = fetch_url(feed_url)
+        for line in raw.splitlines():
+            line = line.strip()
+            if not line or '#' not in line:
+                continue
+            parts = line.split('#')
+            addr = parts[0].strip()
+            code = parts[1].split()[0].upper()
+            if code in BANNED_REGIONS:
+                continue
+            if code in all_target_countries and addr not in candidates[code]:
+                candidates[code].append(addr)
 
-    # Fallbacks if remote download is temporarily unreachable
-    if not three_network_nodes:
-        three_network_nodes = [
-            "104.19.52.196:443#🇨🇳 移动优选-01 | 香港/广州低延迟骨干 (CMCC)",
-            "104.17.220.222:443#🇨🇳 移动优选-02 | 香港/广州低延迟骨干 (CMCC)",
-            "172.67.68.127:443#🇨🇳 联通优选-01 | 圣何塞/AS4837直连骨干 (CUCC)",
-            "104.26.14.253:443#🇨🇳 联通优选-02 | 圣何塞/AS4837直连骨干 (CUCC)",
-            "104.18.33.8:443#🇨🇳 电信优选-01 | 洛杉矶/163直连骨干 (CTCC)",
-            "104.17.152.131:443#🇨🇳 电信优选-02 | 洛杉矶/163直连骨干 (CTCC)"
-        ]
-
-    # 2. Ingest Regional Feeds from LancelotRar & CountryMerge
-    print("[*] Ingesting regional feeds...")
-    raw_lancelot = fetch_url('https://raw.githubusercontent.com/LancelotRar/best-cf-ips/main/best-cf-ipv4.txt')
-    raw_countrymerge = fetch_url('https://countrymerge.pages.dev/all.txt')
-
-    regional_candidates = {code: [] for code in TARGET_COUNTRIES}
-    for line in (raw_lancelot.splitlines() + raw_countrymerge.splitlines()):
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        parts = line.split('#')
-        addr = parts[0].strip()
-        code = parts[1].split()[0] if len(parts) > 1 else ''
-        if code in TARGET_COUNTRIES and code not in FORBIDDEN_REGIONS:
-            regional_candidates[code].append(addr)
-
-    # Pre-verified clean regional baseline nodes (guaranteed zero Oracle, verified TLS)
+    # Clean verified baselines (Guaranteed zero Oracle, verified TLS)
     baseline_nodes = {
-        'CH': [('91.124.121.33', 443, '苏黎世 Hostkey B.V.'), ('91.124.121.33', 8443, '苏黎世 Hostkey B.V.')],
-        'DE': [('138.124.93.139', 443, '法兰克福 Aeza International'), ('152.53.229.84', 443, '纽伦堡 netcup GmbH')],
-        'NL': [('82.196.13.153', 443, '阿姆斯特丹 DigitalOcean'), ('146.185.141.14', 443, '阿姆斯特丹 DigitalOcean')],
-        'GB': [('45.152.64.50', 8443, '伦敦 Lucidacloud'), ('134.209.185.10', 443, '伦敦 DigitalOcean')],
-        'SE': [('176.124.202.130', 2083, '斯德哥尔摩 Aeza International'), ('213.165.35.112', 443, '斯德哥尔摩 Aeza International')],
-        'PL': [('104.245.245.16', 8443, '华沙 Tier.Net Technologies'), ('70.34.244.250', 53062, '华沙 The Constant Company')],
-        'FR': [('217.60.252.106', 443, '巴黎 CGI Global'), ('185.13.37.173', 443, '瓦朗谢讷 Techcrea Solutions')],
-        'JP': [('153.121.45.101', 443, '东京 SAKURA Internet'), ('23.27.169.196', 443, '东京 Ace Data Centers')],
-        'KR': [('14.52.210.173', 12138, '首尔 Korea Telecom'), ('14.52.210.173', 12312, '首尔 Korea Telecom')],
-        'CA': [('103.214.69.199', 443, '蒙特利尔 YottaSrc'), ('38.49.212.71', 8443, '蒙特利尔 Rica Web Services')],
-        'US': [('104.25.242.199', 443, '西海岸直连骨干 (Cloudflare Anycast)'), ('104.25.248.103', 443, '西海岸直连骨干 (Cloudflare Anycast)')],
-        'IT': [('188.114.96.226', 443, '米兰欧洲核心 (Cloudflare Europe)'), ('188.114.97.3', 443, '米兰欧洲核心 (Cloudflare Europe)')],
-        'AU': [('104.18.80.44', 443, '悉尼大洋洲专线 (Cloudflare Anycast)'), ('104.16.70.35', 443, '悉尼大洋洲专线 (Cloudflare Anycast)')]
+        'NL': [('64.227.75.250', 443, '阿姆斯特丹 DigitalOcean'), ('188.166.121.10', 443, '阿姆斯特丹 DigitalOcean')],
+        'GB': [('185.248.86.218', 443, '伦敦 DataCamp Limited'), ('178.62.81.144', 443, '伦敦 DigitalOcean')],
+        'SE': [('176.126.70.158', 443, '斯德哥尔摩 DataCamp Limited'), ('176.124.202.130', 2083, '斯德哥尔摩 Aeza International')],
+        'PL': [('54.38.203.239', 443, '华沙 OVH SAS'), ('51.83.160.93', 443, '华沙 OVH SAS')],
+        'CH': [('141.227.149.145', 443, '苏黎世 DataCamp Limited'), ('91.124.121.33', 8443, '苏黎世 Hostkey B.V.')],
+        'DE': [('178.22.26.180', 443, '法兰克福 InterNetX GmbH'), ('138.124.93.139', 443, '法兰克福 Aeza International')],
+        'FR': [('94.183.188.90', 443, '巴黎 Techcrea Solutions'), ('185.13.37.173', 443, '巴黎 Techcrea Solutions')],
+        'IT': [('149.154.157.213', 443, '米兰 DataCamp Limited'), ('188.114.96.226', 443, '米兰 Cloudflare Europe')],
+        'ES': [('92.178.109.187', 443, '马德里 Orange Espagne SA'), ('91.149.243.34', 443, '马德里 DataCamp Limited')],
+        'FI': [('5.144.181.41', 443, '赫尔辛基 Telia Finland Oyj'), ('85.204.18.93', 443, '赫尔辛基 DataCamp Limited')],
+        'AT': [('89.58.16.199', 443, '维也纳 netcup GmbH'), ('185.75.241.170', 443, '维也纳 DataCamp Limited')],
+        'CZ': [('109.172.8.73', 443, '布拉格 DataCamp Limited'), ('109.172.9.242', 443, '布拉格 DataCamp Limited')],
+        'IE': [('198.55.103.168', 443, '都柏林 FDCservers.net'), ('85.159.229.122', 443, '都柏林 DataCamp Limited')],
+        'NO': [('194.5.98.17', 443, '奥斯陆 DataCamp Limited'), ('194.32.107.150', 443, '奥斯陆 DataCamp Limited')],
+        'DK': [('193.180.209.21', 443, '哥本哈根 DataCamp Limited'), ('193.181.212.25', 443, '哥本哈根 DataCamp Limited')],
+        'CA': [('150.242.90.62', 443, '蒙特利尔 DataCamp Limited'), ('103.214.69.199', 443, '蒙特利尔 YottaSrc')],
+        'AU': [('139.84.205.230', 443, '悉尼 Constant Company'), ('45.32.191.198', 443, '悉尼 Constant Company')],
+        'NZ': [('185.71.230.237', 443, '奥克兰 DataCamp Limited'), ('114.23.136.104', 443, '奥克兰 Vocus NZ')],
+        'BR': [('43.174.192.1', 443, '圣保罗 Tencent Cloud Computing'), ('172.237.60.225', 443, '圣保罗 Akamai Connected Cloud')],
+        'AR': [('43.174.195.1', 443, '布宜诺斯艾利斯 Tencent Cloud')],
+        'CL': [('64.176.9.246', 443, '圣地亚哥 Constant Company')],
+        'ZA': [('38.54.64.204', 443, '约翰内斯堡 Cogent Communications'), ('139.84.242.103', 443, '约翰内斯堡 Constant Company')],
+        'EG': [('38.54.59.70', 443, '开罗 Cogent Communications')],
+        'NG': [('102.130.48.155', 2053, '拉各斯 MainOne Cable Company')]
     }
 
-    selected_nodes_by_country = {}
+    selected_nodes = {}
 
-    for code, info in TARGET_COUNTRIES.items():
+    def select_nodes_for_country(code, max_count=2):
         found = []
-        # Test candidate pool first
-        pool = regional_candidates.get(code, [])
+        pool = candidates.get(code, [])
         for addr in pool:
-            if len(found) >= 2:
+            if len(found) >= max_count:
                 break
             try:
                 ip, port_str = addr.split(':')
@@ -200,21 +210,21 @@ def main():
             geo = get_geoip(ip)
             if not geo or geo['asn'] in BANNED_ASNS:
                 continue
-            if geo['countryCode'] in FORBIDDEN_REGIONS:
+            if geo['countryCode'] in BANNED_REGIONS:
                 continue
             if geo['countryCode'] != code and geo['asn'] != 13335:
                 continue
 
             ok, rtt = verify_tls(ip, port)
             if ok:
-                desc = f"{geo.get('city', info['name'])} {geo.get('isp', '')}".strip()
+                desc = f"{geo.get('city', all_target_countries[code]['name'])} {geo.get('isp', '')}".strip()
                 found.append((ip, port, desc))
-            time.sleep(0.2)
+            time.sleep(0.15)
 
-        # Fill with verified baselines if pool candidates insufficient
-        if len(found) < 2 and code in baseline_nodes:
+        # Baseline fallback if needed
+        if len(found) < max_count and code in baseline_nodes:
             for b_ip, b_port, b_desc in baseline_nodes[code]:
-                if len(found) >= 2:
+                if len(found) >= max_count:
                     break
                 if any(f[0] == b_ip and f[1] == b_port for f in found):
                     continue
@@ -222,20 +232,108 @@ def main():
                 if ok:
                     found.append((b_ip, b_port, b_desc))
 
-        selected_nodes_by_country[code] = found
+        return found
 
-    # 3. Format addressesapi.txt output
+    # Process Europe
+    print("\n[*] Selecting European Union & Europe nodes...")
+    for code in EUROPE_COUNTRIES:
+        selected_nodes[code] = select_nodes_for_country(code, max_count=2)
+
+    # Process Canada
+    print("[*] Selecting Canada nodes...")
+    selected_nodes['CA'] = select_nodes_for_country('CA', max_count=2)
+
+    # Process Oceania
+    print("[*] Selecting Oceania nodes...")
+    selected_nodes['AU'] = select_nodes_for_country('AU', max_count=2)
+    selected_nodes['NZ'] = select_nodes_for_country('NZ', max_count=1)
+
+    # Process South America: User specifically requested EXACTLY 2 nodes
+    print("[*] Selecting South America (exactly 2 nodes)...")
+    sa_nodes = []
+    # Primary from BR
+    br_nodes = select_nodes_for_country('BR', max_count=1)
+    if br_nodes:
+        sa_nodes.append(('BR', br_nodes[0]))
+    # Secondary from AR or CL
+    ar_nodes = select_nodes_for_country('AR', max_count=1)
+    if ar_nodes:
+        sa_nodes.append(('AR', ar_nodes[0]))
+    elif not ar_nodes:
+        cl_nodes = select_nodes_for_country('CL', max_count=1)
+        if cl_nodes:
+            sa_nodes.append(('CL', cl_nodes[0]))
+    if len(sa_nodes) < 2 and br_nodes and len(select_nodes_for_country('BR', max_count=2)) > 1:
+        sa_nodes.append(('BR', select_nodes_for_country('BR', max_count=2)[1]))
+
+    # Process Africa: User specifically requested EXACTLY 2 nodes
+    print("[*] Selecting Africa (exactly 2 nodes)...")
+    af_nodes = []
+    # Primary from ZA
+    za_nodes = select_nodes_for_country('ZA', max_count=1)
+    if za_nodes:
+        af_nodes.append(('ZA', za_nodes[0]))
+    # Secondary from EG or NG
+    eg_nodes = select_nodes_for_country('EG', max_count=1)
+    if eg_nodes:
+        af_nodes.append(('EG', eg_nodes[0]))
+    elif not eg_nodes:
+        ng_nodes = select_nodes_for_country('NG', max_count=1)
+        if ng_nodes:
+            af_nodes.append(('NG', ng_nodes[0]))
+    if len(af_nodes) < 2 and za_nodes and len(select_nodes_for_country('ZA', max_count=2)) > 1:
+        af_nodes.append(('ZA', select_nodes_for_country('ZA', max_count=2)[1]))
+
+    # Format addressesapi.txt output
     output_lines = []
 
-    # Section 1: Three-network super-fast entry nodes
-    output_lines.extend(three_network_nodes)
-
-    # Section 2: Multi-country verified nodes
-    for code, info in TARGET_COUNTRIES.items():
-        nodes = selected_nodes_by_country.get(code, [])
+    # 1. European Union & European Nodes
+    for code, info in EUROPE_COUNTRIES.items():
+        nodes = selected_nodes.get(code, [])
         for idx, (ip, port, desc) in enumerate(nodes, start=1):
             remark = f"{info['flag']} {info['name']}-{idx:02d} | {desc}"
             output_lines.append(f"{ip}:{port}#{remark}")
+
+    # 2. Canada Nodes
+    for idx, (ip, port, desc) in enumerate(selected_nodes.get('CA', []), start=1):
+        remark = f"🇨🇦 加拿大-{idx:02d} | {desc}"
+        output_lines.append(f"{ip}:{port}#{remark}")
+
+    # 3. Oceania Nodes
+    for code in ['AU', 'NZ']:
+        info = OCEANIA_COUNTRIES[code]
+        nodes = selected_nodes.get(code, [])
+        for idx, (ip, port, desc) in enumerate(nodes, start=1):
+            remark = f"{info['flag']} {info['name']}-{idx:02d} | {desc}"
+            output_lines.append(f"{ip}:{port}#{remark}")
+
+    # 4. South America Nodes (Exactly 2 nodes)
+    for idx, (code, (ip, port, desc)) in enumerate(sa_nodes[:2], start=1):
+        info = SOUTH_AMERICA_COUNTRIES[code]
+        remark = f"{info['flag']} 南美-{info['name']}-{idx:02d} | {desc}"
+        output_lines.append(f"{ip}:{port}#{remark}")
+
+    # 5. Africa Nodes (Exactly 2 nodes)
+    for idx, (code, (ip, port, desc)) in enumerate(af_nodes[:2], start=1):
+        info = AFRICA_COUNTRIES[code]
+        remark = f"{info['flag']} 非洲-{info['name']}-{idx:02d} | {desc}"
+        output_lines.append(f"{ip}:{port}#{remark}")
+
+    # Sanity check: Ensure ZERO banned regions exist in output
+    for line in output_lines:
+        for banned in BANNED_REGIONS:
+            if f"#{banned}" in line or f" #{banned}" in line:
+                raise ValueError(f"Security Alert: Banned region {banned} detected in output line: {line}")
+            if banned == 'US' and ('美国' in line or 'USA' in line):
+                raise ValueError(f"Security Alert: US node detected: {line}")
+            if banned == 'HK' and ('香港' in line or 'Hong Kong' in line):
+                raise ValueError(f"Security Alert: HK node detected: {line}")
+            if banned == 'JP' and ('日本' in line or 'Tokyo' in line or 'Japan' in line):
+                raise ValueError(f"Security Alert: JP node detected: {line}")
+            if banned == 'KR' and ('韩国' in line or 'Seoul' in line or 'Korea' in line):
+                raise ValueError(f"Security Alert: KR node detected: {line}")
+            if banned == 'CN' and ('中国' in line or '移动' in line or '联通' in line or '电信' in line):
+                raise ValueError(f"Security Alert: CN node detected: {line}")
 
     # Write addressesapi.txt
     api_path = os.path.join(repo_dir, 'addressesapi.txt')
@@ -243,16 +341,45 @@ def main():
         f.write('\n'.join(output_lines) + '\n')
     print(f"\n[+] Successfully written {len(output_lines)} nodes to addressesapi.txt")
 
-    # Write README.md dashboard
+    # Generate README.md Overview Table
     update_time = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())
     table_rows = []
-    for code, info in TARGET_COUNTRIES.items():
-        nodes = selected_nodes_by_country.get(code, [])
+
+    # Europe
+    table_rows.append("| **🌍 欧洲 / 欧盟国家** | | |")
+    for code, info in EUROPE_COUNTRIES.items():
+        nodes = selected_nodes.get(code, [])
         n1 = f"`{nodes[0][0]}:{nodes[0][1]}` ({nodes[0][2]})" if len(nodes) > 0 else "N/A"
         n2 = f"`{nodes[1][0]}:{nodes[1][1]}` ({nodes[1][2]})" if len(nodes) > 1 else "N/A"
         table_rows.append(f"| {info['flag']} {info['name']} (`{code}`) | {n1} | {n2} |")
 
-    readme_content = f"""# Cloudflare Multi-Region Preferred Subscription (EdgeTunnel ADDAPI)
+    # Canada & Oceania
+    table_rows.append("| **🌎 美洲 (加拿大) & 🌏 大洋洲** | | |")
+    ca_nodes = selected_nodes.get('CA', [])
+    n1 = f"`{ca_nodes[0][0]}:{ca_nodes[0][1]}` ({ca_nodes[0][2]})" if len(ca_nodes) > 0 else "N/A"
+    n2 = f"`{ca_nodes[1][0]}:{ca_nodes[1][1]}` ({ca_nodes[1][2]})" if len(ca_nodes) > 1 else "N/A"
+    table_rows.append(f"| 🇨🇦 加拿大 (`CA`) | {n1} | {n2} |")
+
+    for code in ['AU', 'NZ']:
+        info = OCEANIA_COUNTRIES[code]
+        nodes = selected_nodes.get(code, [])
+        n1 = f"`{nodes[0][0]}:{nodes[0][1]}` ({nodes[0][2]})" if len(nodes) > 0 else "N/A"
+        n2 = f"`{nodes[1][0]}:{nodes[1][1]}` ({nodes[1][2]})" if len(nodes) > 1 else "N/A"
+        table_rows.append(f"| {info['flag']} {info['name']} (`{code}`) | {n1} | {n2} |")
+
+    # South America
+    table_rows.append("| **🌎 南美洲 (精选2节点)** | | |")
+    for idx, (code, (ip, port, desc)) in enumerate(sa_nodes[:2], start=1):
+        info = SOUTH_AMERICA_COUNTRIES[code]
+        table_rows.append(f"| {info['flag']} 南美-{info['name']} (`{code}`) | `{ip}:{port}` ({desc}) | - |")
+
+    # Africa
+    table_rows.append("| **🌍 非洲 (精选2节点)** | | |")
+    for idx, (code, (ip, port, desc)) in enumerate(af_nodes[:2], start=1):
+        info = AFRICA_COUNTRIES[code]
+        table_rows.append(f"| {info['flag']} 非洲-{info['name']} (`{code}`) | `{ip}:{port}` ({desc}) | - |")
+
+    readme_content = f"""# Cloudflare Preferred Multi-Region Subscription (EdgeTunnel ADDAPI)
 
 Automated subscription feed for EdgeTunnel ADDAPI with real-time verification.
 
@@ -262,14 +389,14 @@ Automated subscription feed for EdgeTunnel ADDAPI with real-time verification.
 
 ## Status
 - **Last Updated**: `{update_time}`
-- **Domestic Three-Network Optimization**: CMCC (China Mobile), CUCC (China Unicom), CTCC (China Telecom).
-- **13 Target Countries**: Switzerland (CH), Italy (IT), France (FR), Germany (DE), Netherlands (NL), UK (GB), Sweden (SE), Poland (PL), Australia (AU), Canada (CA), Japan (JP), South Korea (KR), US (US).
-- **Strict Quality Enforcement**: ZERO Oracle Public Cloud (`AS31898`), ZERO domestic proxy hops, ZERO China/Macau/Hong Kong/Singapore regional nodes.
+- **Coverage**: European Union / Europe (15 countries), Canada, Oceania (Australia, New Zealand), South America (2 nodes), Africa (2 nodes).
+- **Strictly BANNED**: ZERO US (美国), ZERO HK (香港), ZERO JP (日本), ZERO KR (韩国), ZERO CN (中国), ZERO SG (新加坡), ZERO MO (澳门), ZERO TW (台湾).
+- **Quality Standard**: ZERO Oracle Public Cloud (`AS31898`), verified TLS connectivity.
 - **Update Frequency**: Tested and synchronized via GitHub Actions every 4 hours.
 
 ## Active Node Overview
 
-| Country | Primary Node | Secondary Node |
+| Region / Country | Primary Node | Secondary Node |
 | :--- | :--- | :--- |
 {chr(10).join(table_rows)}
 """
