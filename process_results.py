@@ -162,47 +162,122 @@ def check_trace_node(ip, port, expected_cc):
     finally:
         s.close()
 
-def fetch_community_candidates(cc):
-    url = f'https://raw.githubusercontent.com/NiREvil/vless/main/sub/country_proxies/{cc}.txt'
+GLOBAL_POOL_CACHE = None
+
+def load_all_candidates():
+    global GLOBAL_POOL_CACHE
+    if GLOBAL_POOL_CACHE is not None:
+        return GLOBAL_POOL_CACHE
+    
+    from collections import defaultdict
+    pools = defaultdict(list)
+    
+    # 1. Load from muhaip2/ProxyIP (over 7000 nodes)
     try:
+        url = 'https://raw.githubusercontent.com/muhaip2/ProxyIP/main/ProxyIP.txt'
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=4) as resp:
-            lines = resp.read().decode('utf-8', errors='ignore').splitlines()
-        candidates = []
+        with urllib.request.urlopen(req, timeout=10) as r:
+            lines = r.read().decode('utf-8', errors='ignore').splitlines()
+        target_codes = {c['code'] for c in TARGET_CONFIG}
         for l in lines:
-            parts = l.strip().split()
-            if len(parts) == 2:
-                candidates.append((parts[0], int(parts[1])))
-        return candidates
+            parts = [p.strip() for p in l.split(',')]
+            if len(parts) >= 3:
+                ip, port_s, cc = parts[0], parts[1], parts[2].upper()
+                if cc in target_codes:
+                    try:
+                        port = int(port_s)
+                        pools[cc].append((ip, port))
+                    except Exception:
+                        pass
+    except Exception as e:
+        print(f"muhaip2 pool fetch error: {e}")
+
+    # 2. Supplemental candidate sources
+    for cfg in TARGET_CONFIG:
+        cc = cfg['code']
+        pools[cc].extend(cfg.get('seeds', []))
+        try:
+            url = f'https://raw.githubusercontent.com/NiREvil/vless/main/sub/country_proxies/{cc}.txt'
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=4) as resp:
+                lines = resp.read().decode('utf-8', errors='ignore').splitlines()
+            for l in lines:
+                parts = l.strip().split()
+                if len(parts) == 2:
+                    pools[cc].append((parts[0], int(parts[1])))
+        except Exception:
+            pass
+
+    # Deduplicate
+    for cc in pools:
+        seen = set()
+        dedup = []
+        for item in pools[cc]:
+            if item not in seen:
+                seen.add(item)
+                dedup.append(item)
+        pools[cc] = dedup
+
+    GLOBAL_POOL_CACHE = pools
+    return pools
+
+def test_single_endpoint(ip, port, expected_cc):
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(2.0)
+    t0 = time.time()
+    try:
+        s.connect((ip, port))
+        tls = ctx.wrap_socket(s, server_hostname='speed.cloudflare.com')
+        handshake_ms = (time.time() - t0) * 1000
+        
+        # Test download speed with 100KB payload
+        req = 'GET /__down?bytes=100000 HTTP/1.1\r\nHost: speed.cloudflare.com\r\nUser-Agent: curl/7.88.1\r\nConnection: close\r\n\r\n'
+        t_req = time.time()
+        tls.sendall(req.encode())
+        total = 0
+        while True:
+            b = tls.recv(8192)
+            if not b:
+                break
+            total += len(b)
+        elapsed = max(time.time() - t_req, 0.001)
+        speed_mb = (total / (1024 * 1024)) / elapsed
+        
+        return {
+            'ip': ip,
+            'port': port,
+            'latency_ms': round(handshake_ms, 1),
+            'speed_mbps': round(speed_mb, 2)
+        }
     except Exception:
-        return []
+        return None
+    finally:
+        s.close()
 
 def scan_country_pool(cfg):
     cc = cfg['code']
-    seeds = list(cfg.get('seeds', []))
-    community_ips = fetch_community_candidates(cc)
+    pools = load_all_candidates()
+    candidates = pools.get(cc, [])
+    if not candidates:
+        candidates = list(cfg.get('seeds', []))
     
-    combined = seeds + community_ips
-    seen = set()
-    dedup = []
-    for ip, port in combined:
-        if (ip, port) not in seen:
-            seen.add((ip, port))
-            dedup.append((ip, port))
-    
-    test_pool = dedup[:25]
+    test_batch = candidates[:30]
     verified = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
-        futures = {ex.submit(check_trace_node, ip, port, cc): (ip, port) for ip, port in test_pool}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
+        futures = {ex.submit(test_single_endpoint, ip, p, cc): (ip, p) for ip, p in test_batch}
         for f in concurrent.futures.as_completed(futures):
             res = f.result()
             if res:
                 verified.append(res)
     
-    verified.sort(key=lambda x: x['latency_ms'])
+    # Sort by lowest latency, then highest speed
+    verified.sort(key=lambda x: (x['latency_ms'], -x['speed_mbps']))
     if verified:
         return [(v['ip'], v['port']) for v in verified[:2]]
-    return seeds[:2]
+    return candidates[:2]
 
 def main():
     print('[*] Fetching best China mainland / domestic Cloudflare low-latency inbound nodes...')
@@ -211,20 +286,11 @@ def main():
     print(f'[+] Primary domestic China inbound node: {primary_domestic_ip} ({domestic_nodes[0].get("desc", "低延迟")})')
 
     print('[*] Starting strict cdn-cgi/trace validation across 13 target countries (Excludes HKG, SIN, MO)...')
+    # 1. addresses_lines is strictly for target foreign countries (addressesapi.txt)
+    # Never put domestic China nodes in addressesapi.txt (user doesn't want domestic proxies)
     addresses_lines = []
     vless_lines = []
     clash_nodes = []
-
-    # 1. Provide verified clean domestic Anycast domains & IPs for EdgeTunnel ADDAPI
-    # When EdgeTunnel parses these, the client connects to Cloudflare directly in 60ms-120ms
-    for d in DOMESTIC_CHINA_CF_DOMAINS:
-        addresses_lines.append(f"{d['addr']}:{d['port']}#⚡ 国内极速优选 | {d['carrier']} {d['desc']}")
-    
-    seen_ips = set()
-    for idx, d_node in enumerate(domestic_nodes[:6], 1):
-        if d_node['ip'] not in seen_ips:
-            seen_ips.add(d_node['ip'])
-            addresses_lines.append(f"{d_node['ip']}:{d_node['port']}#⚡ 国内直连优选-{idx:02d} | {d_node['carrier']} {d_node['desc']}")
 
     # 2. Add strictly verified regional nodes
     for cfg in TARGET_CONFIG:
@@ -233,10 +299,10 @@ def main():
         for idx, (ip, port) in enumerate(best_ips, 1):
             remark = f"{cfg['flag']} {cfg['name']}-{idx:02d} | {cfg['desc']}"
             
-            # Format A: In addressesapi.txt, we construct dual-tier VLESS template
-            # Inbound server = primary_domestic_ip (Cloudflare edge, low-latency ~60ms)
-            # Outbound path = /?proxyip=<ip>:<port>&ed=2048 (routes to regional proxyip in target country)
-            # EdgeTunnel will replace 00000000... with user UUID and example.com with user host!
+            # Format A: In addressesapi.txt for EdgeTunnel ADDAPI (IP:Port#Remark)
+            addresses_lines.append(f"{ip}:{port}#{remark}")
+
+            # Format B: In vless.txt
             encoded_path = urllib.parse.quote(f"/?proxyip={ip}:{port}&ed=2048")
             encoded_remark = urllib.parse.quote(remark)
             vless_line = f"vless://00000000-0000-4000-8000-000000000000@{primary_domestic_ip}:443?encryption=none&security=tls&sni=example.com&type=ws&host=example.com&path={encoded_path}#{encoded_remark}"
