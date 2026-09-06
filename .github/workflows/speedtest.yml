@@ -29,4 +29,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add addressesapi.txt clash.yaml vless.txt sub.txt README.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): update preferred multi-region nodes and clash config [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): update preferred multi-region nodes and clash config [skip ci]" && git pull --rebase origin main && git push origin main)
