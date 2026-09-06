@@ -7,7 +7,7 @@ Automated subscription feed for EdgeTunnel ADDAPI with real-time verification.
 - **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
-- **Last Updated**: `2026-09-06 09:09:03 UTC`
+- **Last Updated**: `2026-09-06 09:13:51 UTC`
 - **Domestic Three-Network Optimization**: CMCC (China Mobile), CUCC (China Unicom), CTCC (China Telecom).
 - **13 Target Countries**: Switzerland (CH), Italy (IT), France (FR), Germany (DE), Netherlands (NL), UK (GB), Sweden (SE), Poland (PL), Australia (AU), Canada (CA), Japan (JP), South Korea (KR), US (US).
 - **Strict Quality Enforcement**: ZERO Oracle Public Cloud (`AS31898`), ZERO domestic proxy hops, ZERO China/Macau/Hong Kong/Singapore regional nodes.
