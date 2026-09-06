@@ -19,12 +19,14 @@
 
 # AMS - Netherlands
 104.16.175.95
+104.18.177.30
 
 # DUB - Ireland
 104.16.180.99
 
 # LHR - United Kingdom
 104.16.185.10
+104.18.187.20
 
 # MAD / BCN - Spain
 104.16.190.20
@@ -46,6 +48,7 @@
 
 # WAW - Poland
 104.16.215.70
+104.18.217.85
 
 # PRG - Czech Republic
 104.16.220.80
