@@ -1,15 +1,14 @@
-# Cloudflare Multi-Region Preferred Subscription
+# Cloudflare Multi-Region Preferred Subscription (EdgeTunnel ADDAPI)
 
-Automated high-speed subscription pipeline with multi-region endpoints.
+Automated high-speed subscription feed with multi-region endpoints for EdgeTunnel ADDAPI.
 
-## Endpoints
-- **EdgeTunnel ADDAPI**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
-- **Clash Subscription**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/clash.yaml`
-- **VLESS Base64**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/sub.txt`
+## Feed Endpoints
+- **EdgeTunnel ADDAPI URL**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
+- **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
 - **Last Updated**: `2026-09-06 08:23:01 UTC`
-- **13 Target Countries**: Switzerland, Italy, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US.
+- **13 Target Countries**: Switzerland (CH), Italy (IT), France (FR), Germany (DE), Netherlands (NL), UK (GB), Sweden (SE), Poland (PL), Australia (AU), Canada (CA), Japan (JP), South Korea (KR), US (US).
 - **Strict Exclusions**: ZERO China mainland (`CN`), ZERO Macau (`MO`), ZERO Hong Kong (`HK`), ZERO Singapore (`SG`).
 - **Update Frequency**: Automatically tested and synchronized on GitHub Actions every 4 hours.
 

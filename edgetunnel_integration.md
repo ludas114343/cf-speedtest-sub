@@ -1,80 +1,76 @@
-﻿# EdgeTunnel 联动与 GitHub Actions 4小时自动测速部署指南
+# EdgeTunnel 联动与 GitHub Actions 4小时自动测速部署指南
 
-本项目已为你全套构建完毕，位于本地目录：
-`C:\Users\ludas\.gemini\antigravity\scratch\cf-speedtest-sub`
+本项目仓库：`https://github.com/ludas114343/cf-speedtest-sub`
+本地目录：`C:\Users\ludas\.gemini\antigravity\scratch\cf-speedtest-sub`
 
 ---
 
-## 一、 项目文件结构一览
+## 一、 项目文件结构
 
 ```
 cf-speedtest-sub/
 ├── .github/
 │   └── workflows/
-│       └── speedtest.yml       # GitHub Actions 4小时自动测速与推送工作流
-├── ip.txt                      # 官方 Anycast IP 段池
-├── special_colos.txt           # 瑞士/卢森堡/法国等特色地区种子池
-├── process_results.py          # 测速结果智能解析与 28 个多国节点均衡筛选脚本
-├── sub_worker.js               # 优选订阅分发函数 (支持 Clash/VLESS/EdgeTunnel 纯文本)
+│       └── speedtest.yml       # GitHub Actions 每 4 小时自动测速与推送工作流
+├── ip.txt                      # Cloudflare 官方 Anycast IP 段池
+├── special_colos.txt           # 瑞士、意大利、法国等特色 Anycast 种子池
+├── process_results.py          # 真实吞吐与延迟优选引擎 (筛选 13 国 26 个极速节点)
 ├── addressesapi.txt            # 生成的标准优选列表 (供 EdgeTunnel ADDAPI 消费)
-└── README.md                   # 实时测速排行榜主页 (每次自动测速后自动更新)
+└── README.md                   # 实时节点测速排行榜 (每次自动测速后自动刷新)
 ```
 
 ---
 
-## 二、 如何部署到你的 GitHub (3 步搞定)
+## 二、 架构原理解析 (为什么仓库只需要 addressesapi.txt)
 
-1. **在 GitHub 上新建一个公开仓库**：
-   - 仓库名称建议填：`cf-speedtest-sub`
-   - 选择 **Public**（公开仓库可以享受 GitHub 免费无限制的 Actions 算力与 jsDelivr 免费 CDN 加速）。
+很多用户常常疑惑：为什么仓库不需要上传 `clash.yaml` 或 `vless.txt`？
 
-2. **本地推送到 GitHub**：
-   在终端打开该目录并执行：
-   ```bash
-   cd C:\Users\ludas\.gemini\antigravity\scratch\cf-speedtest-sub
-   git init
-   git add .
-   git commit -m "feat: init cloudflare multi-region speedtest"
-   git branch -M main
-   git remote add origin https://github.com/<你的GitHub用户名>/cf-speedtest-sub.git
-   git push -u origin main
-   ```
-
-3. **开启 GitHub Actions 读写权限**：
-   - 打开 GitHub 仓库页面 -> 点击 **Settings** -> **Actions** -> **General**；
-   - 滑动到最下方 **Workflow permissions**，选择 **Read and write permissions** 并点击 Save；
-   - 这样 GitHub Actions 每次测速完成后，就有权限自动更新 `addressesapi.txt` 和 `README.md`。
+1. **核心机密与隐私隔离**：
+   - 真实的 Clash / VLESS 节点必须包含你部署在 Cloudflare Pages / Workers 上的**私有域名**与**私有 UUID**。
+   - GitHub 仓库是公开的，如果在仓库里生成 Clash 配置，就只能使用虚构的占位符（如 dummy UUID 和 dummy 域名），这种虚构配置导入 Clash 后是连不上的（会报 1101 Worker 错误）。
+2. **EdgeTunnel 的原生职责**：
+   - 你部署在 Cloudflare Pages 的 EdgeTunnel 本身就是一个功能完备的**订阅生成器**。
+   - EdgeTunnel 原生支持 `ADDAPI` 环境变量。当你在 Clash 中请求 EdgeTunnel 订阅链接（如 `https://<你的域名>/sub?target=clash`）时，EdgeTunnel 会自动从 GitHub 下载最新的 `addressesapi.txt`，将里面的优选 IP 和国家备注与你的真实私有 UUID 和域名动态缝合，实时生成属于你个人的、可正常通信的 Clash 订阅。
+3. **职责划分**：
+   - **GitHub Actions (本仓库)**：专职做算力引擎，每 4 小时自动从全球节点库测试下载速度与 TLS 握手延迟，淘汰慢速节点，生成最新最快的 `addressesapi.txt`。
+   - **EdgeTunnel (你的 Cloudflare Pages)**：专职做订阅代理，消费 `addressesapi.txt`，绑定真实凭据输出给 Clash。
 
 ---
 
-## 三、 如何与你的 EdgeTunnel 联动
+## 三、 如何在 EdgeTunnel 中配置 ADDAPI
 
-### 方法 1：直接在 EdgeTunnel 后台设置 ADDAPI（最简便）
-在你部署的 EdgeTunnel（Cloudflare Pages 或 Workers）控制台中：
+在你已经部署好的 EdgeTunnel（Cloudflare Pages 或 Workers）后台中：
+
 1. 进入 **Settings (设置)** -> **Environment Variables (环境变量)**；
-2. 添加变量：
+2. 添加或修改变量：
    - **变量名**：`ADDAPI`
-   - **变量值**：
-     `https://cdn.jsdelivr.net/gh/<你的GitHub用户名>/cf-speedtest-sub@main/addressesapi.txt`
-     *(通过 jsDelivr 全球 CDN 加速，国内直连毫秒级响应)*
+   - **变量值**（二选一均可）：
+     - **GitHub 直链**：
+       `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
+     - **jsDelivr 全球 CDN 加速链**：
+       `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 3. 点击 **Save and Deploy (保存并重新部署)**；
-4. 此时你的 EdgeTunnel 订阅链接会自动融入这 28 个测速出来的多国优质节点！
+4. 部署生效后，在 Clash 中刷新你的 EdgeTunnel 订阅，即可立即同步获得这 26 个实测优质多国节点！
 
 ---
 
-## 四、 节点特色与地区分布
+## 四、 节点分布与过滤规范
 
-本配置专门针对你的需求定制，精选 **28 个顶级节点**，覆盖：
-
-2. **🇨🇭 瑞士 (ZRH/GVA) & 🇱🇺 卢森堡 (LUX)**：
-   - **中立与隐私特权**：欧洲金融与数据隐私法案保护区，极度冷门干净。
-3. **🇫🇷 法国 (CDG/MRS) & 🇩🇪 德国 (FRA) & 🇳🇱 荷兰 (AMS) & 🇮🇪 爱尔兰 (DUB)**：
-   - 欧洲骨干核心节点，网络中立，支持抗版权流媒体。
-4. **🇦🇺 澳大利亚 (SYD/MEL) & 🇳🇿 新西兰 (AKL)**：
-   - 大洋洲直连中心。
-5. **🇨🇦 加拿大 (YYZ/YVR)**：
-   - 北美低延迟低风控。
-6. **🇰🇷 韩国 (ICN) & 🇯🇵 日本 (NRT/KIX) & 🇸🇬 新加坡 (SIN) & 🇭🇰 香港 (HKG)**：
-   - 亚太超低延迟（30-65ms）核心主力。
-7. **🇺🇸 美国 (LAX/SJC/IAD)**：
-   - 硅谷与西海岸直连。
+- **严格覆盖 13 个主流国家（每国严格精选 2 个最优节点，共 26 节点）**：
+  - 🇨🇭 瑞士 (`CH`)
+  - 🇮🇹 意大利 (`IT`)
+  - 🇫🇷 法国 (`FR`)
+  - 🇩🇪 德国 (`DE`)
+  - 🇳🇱 荷兰 (`NL`)
+  - 🇬🇧 英国 (`GB`)
+  - 🇸🇪 瑞典 (`SE`)
+  - 🇵🇱 波兰 (`PL`)
+  - 🇦🇺 澳大利亚 (`AU`)
+  - 🇨🇦 加拿大 (`CA`)
+  - 🇯🇵 日本 (`JP`)
+  - 🇰🇷 韩国 (`KR`)
+  - 🇺🇸 美国 (`US`)
+- **严格排除地区**：
+  - 严格不包含任何中国大陆 (`CN`)、中国澳门 (`MO`)、中国香港 (`HK`)、新加坡 (`SG`) 节点。
+- **性能红线**：
+  - 所有入选节点均通过真实 1MB 数据块测速（速度大于 5 Mbps），剔除一切龟速 0.2 Mbps 废节点与 1000ms+ 劣质 VPS。

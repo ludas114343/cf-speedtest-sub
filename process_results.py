@@ -233,10 +233,7 @@ def node_rank(x):
 def main():
     repo_dir = os.path.dirname(os.path.abspath(__file__))
 
-    uuid = os.environ.get('CF_UUID', '30e9c5c8-ed28-4cd9-b008-dc67277f8b02')
-    host = os.environ.get('CF_HOST', 'edgetunnel.pages.dev')
-
-    print("[*] Starting Cloudflare Multi-Region Speedtest & Subscription Generator...")
+    print("[*] Starting Cloudflare Multi-Region Speedtest & Feed Generator for EdgeTunnel...")
     raw_candidates = collect_candidates()
 
     # Deduplicate candidates per country and rank by performance
@@ -281,10 +278,6 @@ def main():
     # Select top 2 nodes per country (Exactly 26 nodes total)
     final_nodes_by_country = {}
     addresses_lines = []
-    vless_lines = []
-    clash_proxies = []
-    proxy_names = []
-    country_groups = {code: [] for code in TARGET_COUNTRIES}
 
     print("\n=== Final 13 Target Country Selection (Top 2 per country) ===")
     for code, info in TARGET_COUNTRIES.items():
@@ -312,41 +305,9 @@ def main():
             lat = node.get('latency', 120.0)
             node_tag = f"{lat:.1f}ms {spd:.1f}Mbps"
             remark = f"{info['flag']} {info['name']}-{idx:02d} | {info['desc']} [{node_tag}]"
-            proxy_names.append(remark)
-            country_groups[code].append(remark)
 
-            # 1. addressesapi.txt format for EdgeTunnel ADDAPI
+            # addressesapi.txt format for EdgeTunnel ADDAPI
             addresses_lines.append(f"{ip}:{port}#{remark}")
-
-            # 2. vless link
-            vless_url = (
-                f"vless://{uuid}@{ip}:{port}?"
-                f"encryption=none&security=tls&sni={host}&fp=random&type=ws&host={host}"
-                f"&path=%2F%3Fed%3D2560#{remark}"
-            )
-            vless_lines.append(vless_url)
-
-            # 3. Clash proxy entry
-            clash_proxies.append({
-                'name': remark,
-                'type': 'vless',
-                'server': ip,
-                'port': port,
-                'uuid': uuid,
-                'network': 'ws',
-                'tls': True,
-                'udp': True,
-                'sni': host,
-                'client-fingerprint': 'chrome',
-                'ws-opts': {
-                    'path': '/?ed=2560',
-                    'headers': {
-                        'Host': host
-                    }
-                },
-                'region': info['region'],
-                'country_code': code
-            })
 
         print(f"  [+] {info['flag']} {code} ({info['name']}): 2 nodes selected. (e.g. {selected[0]['ip']}:{selected[0]['port']} - {selected[0]['tag']})")
 
@@ -355,119 +316,6 @@ def main():
     with open(api_file, 'w', encoding='utf-8') as f:
         f.write('\n'.join(addresses_lines) + '\n')
     print(f"\n[+] Successfully written addressesapi.txt ({len(addresses_lines)} nodes)")
-
-    # Write vless.txt and sub.txt
-    vless_file = os.path.join(repo_dir, 'vless.txt')
-    with open(vless_file, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(vless_lines) + '\n')
-
-    sub_file = os.path.join(repo_dir, 'sub.txt')
-    b64_str = base64.b64encode('\n'.join(vless_lines).encode('utf-8')).decode('utf-8')
-    with open(sub_file, 'w', encoding='utf-8') as f:
-        f.write(b64_str + '\n')
-    print("[+] Successfully written vless.txt and sub.txt")
-
-    # Generate clash.yaml
-    yaml = []
-    yaml.append("port: 7890")
-    yaml.append("socks-port: 7891")
-    yaml.append("allow-lan: true")
-    yaml.append("mode: rule")
-    yaml.append("log-level: info")
-    yaml.append("")
-    yaml.append("proxies:")
-    for p in clash_proxies:
-        yaml.append(f"  - name: \"{p['name']}\"")
-        yaml.append(f"    type: {p['type']}")
-        yaml.append(f"    server: {p['server']}")
-        yaml.append(f"    port: {p['port']}")
-        yaml.append(f"    uuid: {p['uuid']}")
-        yaml.append(f"    network: {p['network']}")
-        yaml.append(f"    tls: {str(p['tls']).lower()}")
-        yaml.append(f"    udp: {str(p['udp']).lower()}")
-        yaml.append(f"    sni: {p['sni']}")
-        yaml.append(f"    client-fingerprint: {p['client-fingerprint']}")
-        yaml.append("    ws-opts:")
-        yaml.append(f"      path: \"{p['ws-opts']['path']}\"")
-        yaml.append("      headers:")
-        yaml.append(f"        Host: {p['ws-opts']['headers']['Host']}")
-
-    yaml.append("")
-    yaml.append("proxy-groups:")
-    yaml.append("  - name: 🚀 节点选择")
-    yaml.append("    type: select")
-    yaml.append("    proxies:")
-    yaml.append("      - ♻️ 自动选择")
-    yaml.append("      - 🌍 欧洲节点")
-    yaml.append("      - 🌏 亚太节点")
-    yaml.append("      - 🌎 美洲节点")
-    for code, info in TARGET_COUNTRIES.items():
-        yaml.append(f"      - \"{info['flag']} {info['name']}\"")
-    for name in proxy_names:
-        yaml.append(f"      - \"{name}\"")
-    yaml.append("      - DIRECT")
-    yaml.append("")
-
-    yaml.append("  - name: ♻️ 自动选择")
-    yaml.append("    type: url-test")
-    yaml.append("    url: http://www.gstatic.com/generate_204")
-    yaml.append("    interval: 300")
-    yaml.append("    tolerance: 50")
-    yaml.append("    proxies:")
-    for name in proxy_names:
-        yaml.append(f"      - \"{name}\"")
-    yaml.append("")
-
-    # Regional Groups
-    euro_names = [p['name'] for p in clash_proxies if p['region'] == '欧洲']
-    asia_names = [p['name'] for p in clash_proxies if p['region'] == '亚太']
-    amer_names = [p['name'] for p in clash_proxies if p['region'] == '美洲']
-
-    yaml.append("  - name: 🌍 欧洲节点")
-    yaml.append("    type: select")
-    yaml.append("    proxies:")
-    for n in euro_names:
-        yaml.append(f"      - \"{n}\"")
-    yaml.append("")
-
-    yaml.append("  - name: 🌏 亚太节点")
-    yaml.append("    type: select")
-    yaml.append("    proxies:")
-    for n in asia_names:
-        yaml.append(f"      - \"{n}\"")
-    yaml.append("")
-
-    yaml.append("  - name: 🌎 美洲节点")
-    yaml.append("    type: select")
-    yaml.append("    proxies:")
-    for n in amer_names:
-        yaml.append(f"      - \"{n}\"")
-    yaml.append("")
-
-    # Country Specific Groups
-    for code, info in TARGET_COUNTRIES.items():
-        group_title = f"{info['flag']} {info['name']}"
-        yaml.append(f"  - name: \"{group_title}\"")
-        yaml.append("    type: select")
-        yaml.append("    proxies:")
-        for n in country_groups[code]:
-            yaml.append(f"      - \"{n}\"")
-        yaml.append("")
-
-    yaml.append("rules:")
-    yaml.append("  - DOMAIN-SUFFIX,youtube.com,🚀 节点选择")
-    yaml.append("  - DOMAIN-SUFFIX,googlevideo.com,🚀 节点选择")
-    yaml.append("  - DOMAIN-SUFFIX,google.com,🚀 节点选择")
-    yaml.append("  - DOMAIN-SUFFIX,github.com,🚀 节点选择")
-    yaml.append("  - DOMAIN-KEYWORD,google,🚀 节点选择")
-    yaml.append("  - DOMAIN-KEYWORD,youtube,🚀 节点选择")
-    yaml.append("  - GEOIP,CN,DIRECT")
-    yaml.append("  - MATCH,🚀 节点选择")
-
-    clash_file = os.path.join(repo_dir, 'clash.yaml')
-    with open(clash_file, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(yaml) + '\n')
-    print(f"[+] Successfully written clash.yaml ({len(clash_proxies)} proxies, 13 country groups)")
 
     # Write README.md dashboard
     readme_file = os.path.join(repo_dir, 'README.md')
@@ -480,18 +328,17 @@ def main():
         n2 = f"`{nodes[1]['ip']}:{nodes[1]['port']}` ({nodes[1]['tag']})" if len(nodes) > 1 else "N/A"
         table_rows.append(f"| {info['flag']} {info['name']} (`{code}`) | {info['region']} | {n1} | {n2} |")
 
-    readme_content = f"""# Cloudflare Multi-Region Preferred Subscription
+    readme_content = f"""# Cloudflare Multi-Region Preferred Subscription (EdgeTunnel ADDAPI)
 
-Automated high-speed subscription pipeline with multi-region endpoints.
+Automated high-speed subscription feed with multi-region endpoints for EdgeTunnel ADDAPI.
 
-## Endpoints
-- **EdgeTunnel ADDAPI**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
-- **Clash Subscription**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/clash.yaml`
-- **VLESS Base64**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/sub.txt`
+## Feed Endpoints
+- **EdgeTunnel ADDAPI URL**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
+- **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
 - **Last Updated**: `{update_time}`
-- **13 Target Countries**: Switzerland, Italy, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US.
+- **13 Target Countries**: Switzerland (CH), Italy (IT), France (FR), Germany (DE), Netherlands (NL), UK (GB), Sweden (SE), Poland (PL), Australia (AU), Canada (CA), Japan (JP), South Korea (KR), US (US).
 - **Strict Exclusions**: ZERO China mainland (`CN`), ZERO Macau (`MO`), ZERO Hong Kong (`HK`), ZERO Singapore (`SG`).
 - **Update Frequency**: Automatically tested and synchronized on GitHub Actions every 4 hours.
 
