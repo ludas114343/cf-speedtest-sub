@@ -155,7 +155,7 @@ def main():
 
     # Pre-verified clean regional baseline nodes (guaranteed zero Oracle, verified TLS)
     baseline_nodes = {
-        'CH': [('91.124.121.33', 8443, '苏黎世 Hostkey B.V.')],
+        'CH': [('91.124.121.33', 443, '苏黎世 Hostkey B.V.'), ('91.124.121.33', 8443, '苏黎世 Hostkey B.V.')],
         'DE': [('138.124.93.139', 443, '法兰克福 Aeza International'), ('152.53.229.84', 443, '纽伦堡 netcup GmbH')],
         'NL': [('82.196.13.153', 443, '阿姆斯特丹 DigitalOcean'), ('146.185.141.14', 443, '阿姆斯特丹 DigitalOcean')],
         'GB': [('45.152.64.50', 8443, '伦敦 Lucidacloud'), ('134.209.185.10', 443, '伦敦 DigitalOcean')],
