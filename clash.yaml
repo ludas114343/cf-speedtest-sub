@@ -5,9 +5,9 @@ mode: rule
 log-level: info
 
 proxies:
-  - name: "🇨🇭 瑞士-01 | 苏黎世专线 [150ms 25.0Mbps]"
+  - name: "🇨🇭 瑞士-01 | 苏黎世专线 [140.0ms 59.6Mbps]"
     type: vless
-    server: 185.18.250.4
+    server: 104.18.42.66
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -19,9 +19,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇨🇭 瑞士-02 | 苏黎世专线 [150ms 25.0Mbps]"
+  - name: "🇨🇭 瑞士-02 | 苏黎世专线 [140.0ms 51.7Mbps]"
     type: vless
-    server: 185.18.250.26
+    server: 104.16.50.10
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -33,9 +33,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇮🇹 意大利-01 | 米兰欧洲核心 [220.8ms 0.3Mbps]"
+  - name: "🇮🇹 意大利-01 | 米兰欧洲核心 [140.0ms 52.2Mbps]"
     type: vless
-    server: 31.14.140.155
+    server: 104.18.198.45
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -47,9 +47,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇮🇹 意大利-02 | 米兰欧洲核心 [221.8ms 2.8Mbps]"
+  - name: "🇮🇹 意大利-02 | 米兰欧洲核心 [140.0ms 50.8Mbps]"
     type: vless
-    server: 80.211.24.43
+    server: 104.16.195.30
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -61,9 +61,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇫🇷 法国-01 | 巴黎欧洲核心 [191.2ms 4.8Mbps]"
+  - name: "🇫🇷 法国-01 | 巴黎欧洲核心 [140.0ms 56.7Mbps]"
     type: vless
-    server: 51.210.159.218
+    server: 104.16.60.25
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -75,23 +75,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇫🇷 法国-02 | 巴黎欧洲核心 [198.6ms 4.4Mbps]"
+  - name: "🇫🇷 法国-02 | 巴黎欧洲核心 [140.0ms 51.3Mbps]"
     type: vless
-    server: 31.58.76.27
-    port: 8443
-    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
-    network: ws
-    tls: true
-    udp: true
-    sni: edgetunnel.pages.dev
-    client-fingerprint: chrome
-    ws-opts:
-      path: "/?ed=2560"
-      headers:
-        Host: edgetunnel.pages.dev
-  - name: "🇩🇪 德国-01 | 法兰克福骨干 [120ms 35.0Mbps]"
-    type: vless
-    server: 104.25.0.6
+    server: 104.18.55.90
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -103,9 +89,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇩🇪 德国-02 | 法兰克福骨干 [120ms 35.0Mbps]"
+  - name: "🇩🇪 德国-01 | 法兰克福骨干 [120.0ms 58.9Mbps]"
     type: vless
-    server: 104.27.0.9
+    server: 104.27.0.1
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -117,7 +103,21 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 15.6Mbps]"
+  - name: "🇩🇪 德国-02 | 法兰克福骨干 [120.0ms 57.3Mbps]"
+    type: vless
+    server: 104.25.0.9
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 7.7Mbps]"
     type: vless
     server: 43.169.18.179
     port: 443
@@ -131,9 +131,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120ms 35.0Mbps]"
+  - name: "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120.0ms 57.4Mbps]"
     type: vless
-    server: 188.114.96.8
+    server: 104.20.0.4
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -145,9 +145,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇬🇧 英国-01 | 伦敦低延迟 [150ms 25.0Mbps]"
+  - name: "🇬🇧 英国-01 | 伦敦低延迟 [140.0ms 53.6Mbps]"
     type: vless
-    server: 164.38.155.52
+    server: 104.18.187.20
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -159,9 +159,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇬🇧 英国-02 | 伦敦低延迟 [150ms 25.0Mbps]"
+  - name: "🇬🇧 英国-02 | 伦敦低延迟 [140.0ms 47.8Mbps]"
     type: vless
-    server: 164.38.155.32
+    server: 104.16.185.10
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -173,9 +173,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [225.7ms 5.2Mbps]"
+  - name: "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [140.0ms 10.8Mbps]"
     type: vless
-    server: 167.104.104.226
+    server: 104.18.212.75
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -187,23 +187,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [231.2ms 4.8Mbps]"
+  - name: "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [140.0ms 6.0Mbps]"
     type: vless
-    server: 37.203.209.18
-    port: 8443
-    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
-    network: ws
-    tls: true
-    udp: true
-    sni: edgetunnel.pages.dev
-    client-fingerprint: chrome
-    ws-opts:
-      path: "/?ed=2560"
-      headers:
-        Host: edgetunnel.pages.dev
-  - name: "🇵🇱 波兰-01 | 华沙东欧骨干 [211.9ms 0.4Mbps]"
-    type: vless
-    server: 185.151.246.220
+    server: 104.16.210.60
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -215,9 +201,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇵🇱 波兰-02 | 华沙东欧骨干 [216.2ms 0.2Mbps]"
+  - name: "🇵🇱 波兰-01 | 华沙东欧骨干 [140.0ms 50.3Mbps]"
     type: vless
-    server: 91.108.237.23
+    server: 104.16.215.70
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -229,9 +215,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
+  - name: "🇵🇱 波兰-02 | 华沙东欧骨干 [140.0ms 20.8Mbps]"
     type: vless
-    server: 192.65.217.7
+    server: 104.18.217.85
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -243,9 +229,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
+  - name: "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [140.0ms 57.6Mbps]"
     type: vless
-    server: 192.65.217.3
+    server: 104.16.70.35
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -257,9 +243,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇨🇦 加拿大-01 | 多伦多北美直连 [150ms 25.0Mbps]"
+  - name: "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [140.0ms 57.1Mbps]"
     type: vless
-    server: 199.212.90.2
+    server: 104.18.80.44
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -271,9 +257,9 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇨🇦 加拿大-02 | 多伦多北美直连 [150ms 25.0Mbps]"
+  - name: "🇨🇦 加拿大-01 | 多伦多北美直连 [140.0ms 54.8Mbps]"
     type: vless
-    server: 199.212.90.7
+    server: 104.16.90.15
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -285,7 +271,21 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 18.5Mbps]"
+  - name: "🇨🇦 加拿大-02 | 多伦多北美直连 [140.0ms 47.3Mbps]"
+    type: vless
+    server: 104.18.95.82
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 7.3Mbps]"
     type: vless
     server: 43.133.166.143
     port: 443
@@ -299,7 +299,7 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 16.1Mbps]"
+  - name: "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 7.1Mbps]"
     type: vless
     server: 177.3.89.196
     port: 443
@@ -313,7 +313,7 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 16.3Mbps]"
+  - name: "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 5.7Mbps]"
     type: vless
     server: 61.109.188.223
     port: 443
@@ -327,7 +327,7 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 14.3Mbps]"
+  - name: "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 6.1Mbps]"
     type: vless
     server: 43.164.132.89
     port: 8443
@@ -341,7 +341,7 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+  - name: "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 58.1Mbps]"
     type: vless
     server: 104.25.242.199
     port: 443
@@ -355,7 +355,7 @@ proxies:
       path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+  - name: "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 51.4Mbps]"
     type: vless
     server: 104.18.47.179
     port: 443
@@ -391,32 +391,32 @@ proxy-groups:
       - "🇯🇵 日本"
       - "🇰🇷 韩国"
       - "🇺🇸 美国"
-      - "🇨🇭 瑞士-01 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇨🇭 瑞士-02 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇮🇹 意大利-01 | 米兰欧洲核心 [220.8ms 0.3Mbps]"
-      - "🇮🇹 意大利-02 | 米兰欧洲核心 [221.8ms 2.8Mbps]"
-      - "🇫🇷 法国-01 | 巴黎欧洲核心 [191.2ms 4.8Mbps]"
-      - "🇫🇷 法国-02 | 巴黎欧洲核心 [198.6ms 4.4Mbps]"
-      - "🇩🇪 德国-01 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇩🇪 德国-02 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 15.6Mbps]"
-      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120ms 35.0Mbps]"
-      - "🇬🇧 英国-01 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇬🇧 英国-02 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [225.7ms 5.2Mbps]"
-      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [231.2ms 4.8Mbps]"
-      - "🇵🇱 波兰-01 | 华沙东欧骨干 [211.9ms 0.4Mbps]"
-      - "🇵🇱 波兰-02 | 华沙东欧骨干 [216.2ms 0.2Mbps]"
-      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-01 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-02 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 18.5Mbps]"
-      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 16.1Mbps]"
-      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 16.3Mbps]"
-      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 14.3Mbps]"
-      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
-      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+      - "🇨🇭 瑞士-01 | 苏黎世专线 [140.0ms 59.6Mbps]"
+      - "🇨🇭 瑞士-02 | 苏黎世专线 [140.0ms 51.7Mbps]"
+      - "🇮🇹 意大利-01 | 米兰欧洲核心 [140.0ms 52.2Mbps]"
+      - "🇮🇹 意大利-02 | 米兰欧洲核心 [140.0ms 50.8Mbps]"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心 [140.0ms 56.7Mbps]"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心 [140.0ms 51.3Mbps]"
+      - "🇩🇪 德国-01 | 法兰克福骨干 [120.0ms 58.9Mbps]"
+      - "🇩🇪 德国-02 | 法兰克福骨干 [120.0ms 57.3Mbps]"
+      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 7.7Mbps]"
+      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120.0ms 57.4Mbps]"
+      - "🇬🇧 英国-01 | 伦敦低延迟 [140.0ms 53.6Mbps]"
+      - "🇬🇧 英国-02 | 伦敦低延迟 [140.0ms 47.8Mbps]"
+      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [140.0ms 10.8Mbps]"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [140.0ms 6.0Mbps]"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干 [140.0ms 50.3Mbps]"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干 [140.0ms 20.8Mbps]"
+      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [140.0ms 57.6Mbps]"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [140.0ms 57.1Mbps]"
+      - "🇨🇦 加拿大-01 | 多伦多北美直连 [140.0ms 54.8Mbps]"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连 [140.0ms 47.3Mbps]"
+      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 7.3Mbps]"
+      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 7.1Mbps]"
+      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 5.7Mbps]"
+      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 6.1Mbps]"
+      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 58.1Mbps]"
+      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 51.4Mbps]"
       - DIRECT
 
   - name: ♻️ 自动选择
@@ -425,148 +425,148 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
-      - "🇨🇭 瑞士-01 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇨🇭 瑞士-02 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇮🇹 意大利-01 | 米兰欧洲核心 [220.8ms 0.3Mbps]"
-      - "🇮🇹 意大利-02 | 米兰欧洲核心 [221.8ms 2.8Mbps]"
-      - "🇫🇷 法国-01 | 巴黎欧洲核心 [191.2ms 4.8Mbps]"
-      - "🇫🇷 法国-02 | 巴黎欧洲核心 [198.6ms 4.4Mbps]"
-      - "🇩🇪 德国-01 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇩🇪 德国-02 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 15.6Mbps]"
-      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120ms 35.0Mbps]"
-      - "🇬🇧 英国-01 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇬🇧 英国-02 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [225.7ms 5.2Mbps]"
-      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [231.2ms 4.8Mbps]"
-      - "🇵🇱 波兰-01 | 华沙东欧骨干 [211.9ms 0.4Mbps]"
-      - "🇵🇱 波兰-02 | 华沙东欧骨干 [216.2ms 0.2Mbps]"
-      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-01 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-02 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 18.5Mbps]"
-      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 16.1Mbps]"
-      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 16.3Mbps]"
-      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 14.3Mbps]"
-      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
-      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+      - "🇨🇭 瑞士-01 | 苏黎世专线 [140.0ms 59.6Mbps]"
+      - "🇨🇭 瑞士-02 | 苏黎世专线 [140.0ms 51.7Mbps]"
+      - "🇮🇹 意大利-01 | 米兰欧洲核心 [140.0ms 52.2Mbps]"
+      - "🇮🇹 意大利-02 | 米兰欧洲核心 [140.0ms 50.8Mbps]"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心 [140.0ms 56.7Mbps]"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心 [140.0ms 51.3Mbps]"
+      - "🇩🇪 德国-01 | 法兰克福骨干 [120.0ms 58.9Mbps]"
+      - "🇩🇪 德国-02 | 法兰克福骨干 [120.0ms 57.3Mbps]"
+      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 7.7Mbps]"
+      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120.0ms 57.4Mbps]"
+      - "🇬🇧 英国-01 | 伦敦低延迟 [140.0ms 53.6Mbps]"
+      - "🇬🇧 英国-02 | 伦敦低延迟 [140.0ms 47.8Mbps]"
+      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [140.0ms 10.8Mbps]"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [140.0ms 6.0Mbps]"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干 [140.0ms 50.3Mbps]"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干 [140.0ms 20.8Mbps]"
+      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [140.0ms 57.6Mbps]"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [140.0ms 57.1Mbps]"
+      - "🇨🇦 加拿大-01 | 多伦多北美直连 [140.0ms 54.8Mbps]"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连 [140.0ms 47.3Mbps]"
+      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 7.3Mbps]"
+      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 7.1Mbps]"
+      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 5.7Mbps]"
+      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 6.1Mbps]"
+      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 58.1Mbps]"
+      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 51.4Mbps]"
 
   - name: 🌍 欧洲节点
     type: select
     proxies:
-      - "🇨🇭 瑞士-01 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇨🇭 瑞士-02 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇮🇹 意大利-01 | 米兰欧洲核心 [220.8ms 0.3Mbps]"
-      - "🇮🇹 意大利-02 | 米兰欧洲核心 [221.8ms 2.8Mbps]"
-      - "🇫🇷 法国-01 | 巴黎欧洲核心 [191.2ms 4.8Mbps]"
-      - "🇫🇷 法国-02 | 巴黎欧洲核心 [198.6ms 4.4Mbps]"
-      - "🇩🇪 德国-01 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇩🇪 德国-02 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 15.6Mbps]"
-      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120ms 35.0Mbps]"
-      - "🇬🇧 英国-01 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇬🇧 英国-02 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [225.7ms 5.2Mbps]"
-      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [231.2ms 4.8Mbps]"
-      - "🇵🇱 波兰-01 | 华沙东欧骨干 [211.9ms 0.4Mbps]"
-      - "🇵🇱 波兰-02 | 华沙东欧骨干 [216.2ms 0.2Mbps]"
+      - "🇨🇭 瑞士-01 | 苏黎世专线 [140.0ms 59.6Mbps]"
+      - "🇨🇭 瑞士-02 | 苏黎世专线 [140.0ms 51.7Mbps]"
+      - "🇮🇹 意大利-01 | 米兰欧洲核心 [140.0ms 52.2Mbps]"
+      - "🇮🇹 意大利-02 | 米兰欧洲核心 [140.0ms 50.8Mbps]"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心 [140.0ms 56.7Mbps]"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心 [140.0ms 51.3Mbps]"
+      - "🇩🇪 德国-01 | 法兰克福骨干 [120.0ms 58.9Mbps]"
+      - "🇩🇪 德国-02 | 法兰克福骨干 [120.0ms 57.3Mbps]"
+      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 7.7Mbps]"
+      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120.0ms 57.4Mbps]"
+      - "🇬🇧 英国-01 | 伦敦低延迟 [140.0ms 53.6Mbps]"
+      - "🇬🇧 英国-02 | 伦敦低延迟 [140.0ms 47.8Mbps]"
+      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [140.0ms 10.8Mbps]"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [140.0ms 6.0Mbps]"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干 [140.0ms 50.3Mbps]"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干 [140.0ms 20.8Mbps]"
 
   - name: 🌏 亚太节点
     type: select
     proxies:
-      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 18.5Mbps]"
-      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 16.1Mbps]"
-      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 16.3Mbps]"
-      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 14.3Mbps]"
+      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [140.0ms 57.6Mbps]"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [140.0ms 57.1Mbps]"
+      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 7.3Mbps]"
+      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 7.1Mbps]"
+      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 5.7Mbps]"
+      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 6.1Mbps]"
 
   - name: 🌎 美洲节点
     type: select
     proxies:
-      - "🇨🇦 加拿大-01 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-02 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
-      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+      - "🇨🇦 加拿大-01 | 多伦多北美直连 [140.0ms 54.8Mbps]"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连 [140.0ms 47.3Mbps]"
+      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 58.1Mbps]"
+      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 51.4Mbps]"
 
   - name: "🇨🇭 瑞士"
     type: select
     proxies:
-      - "🇨🇭 瑞士-01 | 苏黎世专线 [150ms 25.0Mbps]"
-      - "🇨🇭 瑞士-02 | 苏黎世专线 [150ms 25.0Mbps]"
+      - "🇨🇭 瑞士-01 | 苏黎世专线 [140.0ms 59.6Mbps]"
+      - "🇨🇭 瑞士-02 | 苏黎世专线 [140.0ms 51.7Mbps]"
 
   - name: "🇮🇹 意大利"
     type: select
     proxies:
-      - "🇮🇹 意大利-01 | 米兰欧洲核心 [220.8ms 0.3Mbps]"
-      - "🇮🇹 意大利-02 | 米兰欧洲核心 [221.8ms 2.8Mbps]"
+      - "🇮🇹 意大利-01 | 米兰欧洲核心 [140.0ms 52.2Mbps]"
+      - "🇮🇹 意大利-02 | 米兰欧洲核心 [140.0ms 50.8Mbps]"
 
   - name: "🇫🇷 法国"
     type: select
     proxies:
-      - "🇫🇷 法国-01 | 巴黎欧洲核心 [191.2ms 4.8Mbps]"
-      - "🇫🇷 法国-02 | 巴黎欧洲核心 [198.6ms 4.4Mbps]"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心 [140.0ms 56.7Mbps]"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心 [140.0ms 51.3Mbps]"
 
   - name: "🇩🇪 德国"
     type: select
     proxies:
-      - "🇩🇪 德国-01 | 法兰克福骨干 [120ms 35.0Mbps]"
-      - "🇩🇪 德国-02 | 法兰克福骨干 [120ms 35.0Mbps]"
+      - "🇩🇪 德国-01 | 法兰克福骨干 [120.0ms 58.9Mbps]"
+      - "🇩🇪 德国-02 | 法兰克福骨干 [120.0ms 57.3Mbps]"
 
   - name: "🇳🇱 荷兰"
     type: select
     proxies:
-      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 15.6Mbps]"
-      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120ms 35.0Mbps]"
+      - "🇳🇱 荷兰-01 | 阿姆斯特丹极速 [74.4ms 7.7Mbps]"
+      - "🇳🇱 荷兰-02 | 阿姆斯特丹极速 [120.0ms 57.4Mbps]"
 
   - name: "🇬🇧 英国"
     type: select
     proxies:
-      - "🇬🇧 英国-01 | 伦敦低延迟 [150ms 25.0Mbps]"
-      - "🇬🇧 英国-02 | 伦敦低延迟 [150ms 25.0Mbps]"
+      - "🇬🇧 英国-01 | 伦敦低延迟 [140.0ms 53.6Mbps]"
+      - "🇬🇧 英国-02 | 伦敦低延迟 [140.0ms 47.8Mbps]"
 
   - name: "🇸🇪 瑞典"
     type: select
     proxies:
-      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [225.7ms 5.2Mbps]"
-      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [231.2ms 4.8Mbps]"
+      - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧 [140.0ms 10.8Mbps]"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧 [140.0ms 6.0Mbps]"
 
   - name: "🇵🇱 波兰"
     type: select
     proxies:
-      - "🇵🇱 波兰-01 | 华沙东欧骨干 [211.9ms 0.4Mbps]"
-      - "🇵🇱 波兰-02 | 华沙东欧骨干 [216.2ms 0.2Mbps]"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干 [140.0ms 50.3Mbps]"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干 [140.0ms 20.8Mbps]"
 
   - name: "🇦🇺 澳大利亚"
     type: select
     proxies:
-      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
-      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [150ms 25.0Mbps]"
+      - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线 [140.0ms 57.6Mbps]"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线 [140.0ms 57.1Mbps]"
 
   - name: "🇨🇦 加拿大"
     type: select
     proxies:
-      - "🇨🇦 加拿大-01 | 多伦多北美直连 [150ms 25.0Mbps]"
-      - "🇨🇦 加拿大-02 | 多伦多北美直连 [150ms 25.0Mbps]"
+      - "🇨🇦 加拿大-01 | 多伦多北美直连 [140.0ms 54.8Mbps]"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连 [140.0ms 47.3Mbps]"
 
   - name: "🇯🇵 日本"
     type: select
     proxies:
-      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 18.5Mbps]"
-      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 16.1Mbps]"
+      - "🇯🇵 日本-01 | 东京亚太优化 [70.2ms 7.3Mbps]"
+      - "🇯🇵 日本-02 | 东京亚太优化 [71.5ms 7.1Mbps]"
 
   - name: "🇰🇷 韩国"
     type: select
     proxies:
-      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 16.3Mbps]"
-      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 14.3Mbps]"
+      - "🇰🇷 韩国-01 | 首尔高速专线 [65.8ms 5.7Mbps]"
+      - "🇰🇷 韩国-02 | 首尔高速专线 [64.9ms 6.1Mbps]"
 
   - name: "🇺🇸 美国"
     type: select
     proxies:
-      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
-      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 648.0Mbps]"
+      - "🇺🇸 美国-01 | 西海岸直连骨干 [120.0ms 58.1Mbps]"
+      - "🇺🇸 美国-02 | 西海岸直连骨干 [120.0ms 51.4Mbps]"
 
 rules:
   - DOMAIN-SUFFIX,youtube.com,🚀 节点选择
