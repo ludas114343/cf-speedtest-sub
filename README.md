@@ -8,8 +8,8 @@ Automated high-speed subscription pipeline with multi-region endpoints.
 - **VLESS Base64**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/sub.txt`
 
 ## Status
-- **Last Updated**: `2026-09-06 07:44:32 UTC`
-- **13 Target Countries**: Switzerland, Luxembourg, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US.
+- **Last Updated**: `2026-09-06 08:12:15 UTC`
+- **13 Target Countries**: Switzerland, Italy, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US.
 - **Strict Exclusions**: ZERO China mainland (`CN`), ZERO Macau (`MO`), ZERO Hong Kong (`HK`), ZERO Singapore (`SG`).
 - **Update Frequency**: Automatically tested and synchronized on GitHub Actions every 4 hours.
 
@@ -17,16 +17,16 @@ Automated high-speed subscription pipeline with multi-region endpoints.
 
 | Country | Region | Primary Node (Speed/Latency) | Secondary Node (Speed/Latency) |
 | :--- | :--- | :--- | :--- |
-| 🇨🇭 瑞士 (`CH`) | 欧洲 | `185.237.225.95:443` (203.3ms 0.4Mbps) | `141.227.139.175:443` (217.8ms 0.6Mbps) |
-| 🇱🇺 卢森堡 (`LU`) | 欧洲 | `188.42.88.2:443` (185ms 8.0Mbps) | `188.42.88.15:443` (185ms 8.0Mbps) |
-| 🇫🇷 法国 (`FR`) | 欧洲 | `38.242.137.199:8443` (191.2ms 0.6Mbps) | `92.222.72.107:8443` (195.8ms 4.3Mbps) |
-| 🇩🇪 德国 (`DE`) | 欧洲 | `8.134.218.35:443` (81.1ms 10.2Mbps) | `64.118.159.219:443` (140.0ms 11.4Mbps) |
-| 🇳🇱 荷兰 (`NL`) | 欧洲 | `43.169.18.179:443` (66.2ms 10.3Mbps) | `43.174.218.1:443` (75.5ms 7.8Mbps) |
-| 🇬🇧 英国 (`GB`) | 欧洲 | `185.49.33.54:443` (164.6ms 9.4Mbps) | `185.248.86.218:443` (169.9ms 7.6Mbps) |
-| 🇸🇪 瑞典 (`SE`) | 欧洲 | `13.140.9.211:443` (209.3ms 1.7Mbps) | `80.66.78.190:443` (225.8ms 0.3Mbps) |
-| 🇵🇱 波兰 (`PL`) | 欧洲 | `51.75.32.106:8443` (212.5ms 0.4Mbps) | `82.22.172.40:2053` (213.8ms 2.8Mbps) |
-| 🇦🇺 澳大利亚 (`AU`) | 亚太 | `176.97.68.17:443` (183.1ms 0.5Mbps) | `206.168.133.137:443` (187.1ms 4.3Mbps) |
-| 🇨🇦 加拿大 (`CA`) | 美洲 | `172.93.32.125:443` (227.9ms 8.6Mbps) | `172.93.32.237:443` (237.0ms 8.4Mbps) |
-| 🇯🇵 日本 (`JP`) | 亚太 | `134.122.164.41:443` (65.4ms 12.4Mbps) | `43.167.11.157:2083` (68.6ms 9.0Mbps) |
-| 🇰🇷 韩国 (`KR`) | 亚太 | `45.93.31.34:443` (63.4ms 9.3Mbps) | `61.109.188.223:443` (65.6ms 15.5Mbps) |
-| 🇺🇸 美国 (`US`) | 美洲 | `45.131.179.106:8443` (70.5ms 8.2Mbps) | `185.65.151.81:443` (107.3ms 5.3Mbps) |
+| 🇨🇭 瑞士 (`CH`) | 欧洲 | `185.18.250.0:443` (150ms 25.0Mbps) | `185.18.250.26:443` (150ms 25.0Mbps) |
+| 🇮🇹 意大利 (`IT`) | 欧洲 | `31.14.140.155:443` (220.8ms 0.3Mbps) | `80.211.24.43:443` (221.8ms 2.8Mbps) |
+| 🇫🇷 法国 (`FR`) | 欧洲 | `217.60.5.140:443` (180ms 15.0Mbps) | `217.60.39.222:8443` (180ms 15.0Mbps) |
+| 🇩🇪 德国 (`DE`) | 欧洲 | `104.25.0.9:443` (120ms 35.0Mbps) | `104.27.0.8:443` (120ms 35.0Mbps) |
+| 🇳🇱 荷兰 (`NL`) | 欧洲 | `43.169.18.179:443` (74.4ms 15.6Mbps) | `188.114.96.7:443` (120ms 35.0Mbps) |
+| 🇬🇧 英国 (`GB`) | 欧洲 | `164.38.155.32:443` (150ms 25.0Mbps) | `164.38.155.29:443` (150ms 25.0Mbps) |
+| 🇸🇪 瑞典 (`SE`) | 欧洲 | `213.165.35.244:443` (180ms 15.0Mbps) | `213.21.251.45:443` (180ms 15.0Mbps) |
+| 🇵🇱 波兰 (`PL`) | 欧洲 | `95.135.43.6:443` (180ms 15.0Mbps) | `82.26.91.7:4444` (180ms 15.0Mbps) |
+| 🇦🇺 澳大利亚 (`AU`) | 亚太 | `192.65.217.7:443` (150ms 25.0Mbps) | `192.65.217.8:443` (150ms 25.0Mbps) |
+| 🇨🇦 加拿大 (`CA`) | 美洲 | `199.212.90.2:443` (150ms 25.0Mbps) | `199.212.90.7:443` (150ms 25.0Mbps) |
+| 🇯🇵 日本 (`JP`) | 亚太 | `177.3.89.135:443` (63.9ms 1.7Mbps) | `43.133.166.143:443` (70.2ms 18.5Mbps) |
+| 🇰🇷 韩国 (`KR`) | 亚太 | `43.128.141.99:443` (64.7ms 11.6Mbps) | `43.164.132.89:8443` (64.9ms 14.3Mbps) |
+| 🇺🇸 美国 (`US`) | 美洲 | `198.41.209.247:443` (50.0ms 280.0Mbps) | `198.41.209.31:443` (52.0ms 285.0Mbps) |
