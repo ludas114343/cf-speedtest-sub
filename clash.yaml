@@ -5,9 +5,9 @@ mode: rule
 log-level: info
 
 proxies:
-  - name: "🇨🇭 瑞士-01 | 苏黎世中立高速"
+  - name: "🇨🇭 瑞士-01 | 苏黎世中立专线"
     type: vless
-    server: 198.41.209.46
+    server: 104.18.42.66
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -16,12 +16,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=91.245.225.79:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇨🇭 瑞士-02 | 苏黎世中立高速"
+  - name: "🇨🇭 瑞士-02 | 苏黎世中立专线"
     type: vless
-    server: 198.41.209.95
+    server: 104.16.50.10
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -30,12 +30,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=176.10.125.114:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇱🇺 卢森堡-01 | 欧洲金融核心"
     type: vless
-    server: 198.41.209.28
+    server: 104.18.15.99
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -44,12 +44,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=45.80.209.25:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇫🇷 法国-01 | 巴黎欧洲骨干"
+  - name: "🇱🇺 卢森堡-02 | 欧洲金融核心"
     type: vless
-    server: 104.17.16.200
+    server: 104.16.14.88
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -58,12 +58,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=129.151.245.96:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇩🇪 德国-01 | 法兰克福直连"
+  - name: "🇫🇷 法国-01 | 巴黎欧洲核心"
     type: vless
-    server: 104.19.192.155
+    server: 104.18.55.90
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -72,12 +72,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=129.159.25.87:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇩🇪 德国-02 | 法兰克福直连"
+  - name: "🇫🇷 法国-02 | 巴黎欧洲核心"
     type: vless
-    server: 198.41.209.46
+    server: 172.67.72.110
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -86,12 +86,40 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=178.17.48.78:443&ed=2560"
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇩🇪 德国-01 | 法兰克福骨干"
+    type: vless
+    server: 104.26.0.0
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇩🇪 德国-02 | 法兰克福骨干"
+    type: vless
+    server: 104.24.0.2
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
     type: vless
-    server: 198.41.209.95
+    server: 188.114.96.7
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -100,12 +128,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=72.56.76.97:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
     type: vless
-    server: 198.41.209.28
+    server: 104.18.177.110
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -114,12 +142,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=188.166.11.236:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇬🇧 英国-01 | 伦敦低延迟"
     type: vless
-    server: 104.17.16.200
+    server: 104.16.185.10
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -128,26 +156,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=88.80.186.197:443&ed=2560"
-      headers:
-        Host: edgetunnel.pages.dev
-  - name: "🇬🇧 英国-02 | 伦敦低延迟"
-    type: vless
-    server: 104.19.192.155
-    port: 443
-    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
-    network: ws
-    tls: true
-    udp: true
-    sni: edgetunnel.pages.dev
-    client-fingerprint: chrome
-    ws-opts:
-      path: "/?proxyip=46.101.29.160:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
     type: vless
-    server: 198.41.209.46
+    server: 172.67.159.48
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -156,12 +170,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=185.58.115.45:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇵🇱 波兰-01 | 华沙东欧节点"
+  - name: "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
     type: vless
-    server: 198.41.209.95
+    server: 104.16.210.60
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -170,12 +184,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=64.176.69.129:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
-  - name: "🇵🇱 波兰-02 | 华沙东欧节点"
+  - name: "🇵🇱 波兰-01 | 华沙东欧骨干"
     type: vless
-    server: 198.41.209.28
+    server: 104.18.217.85
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -184,12 +198,26 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=45.43.137.179:443&ed=2560"
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇵🇱 波兰-02 | 华沙东欧骨干"
+    type: vless
+    server: 104.16.215.70
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线"
     type: vless
-    server: 104.17.16.200
+    server: 104.16.70.35
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -198,12 +226,26 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=207.211.146.175:443&ed=2560"
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线"
+    type: vless
+    server: 172.67.64.167
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇨🇦 加拿大-01 | 多伦多北美直连"
     type: vless
-    server: 104.19.192.155
+    server: 188.164.248.60
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -212,12 +254,26 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=167.160.190.137:443&ed=2560"
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇨🇦 加拿大-02 | 多伦多北美直连"
+    type: vless
+    server: 104.16.90.30
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇯🇵 日本-01 | 东京亚太优化"
     type: vless
-    server: 198.41.209.46
+    server: 104.16.120.40
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -226,12 +282,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=161.33.141.33:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇯🇵 日本-02 | 东京亚太优化"
     type: vless
-    server: 198.41.209.95
+    server: 108.162.198.2
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -240,12 +296,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=132.226.5.25:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇰🇷 韩国-01 | 首尔高速专线"
     type: vless
-    server: 198.41.209.28
+    server: 104.18.107.45
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -254,12 +310,26 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=118.218.10.159:443&ed=2560"
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇰🇷 韩国-02 | 首尔高速专线"
+    type: vless
+    server: 104.16.105.30
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇺🇸 美国-01 | 西海岸直连骨干"
     type: vless
-    server: 104.17.16.200
+    server: 104.19.0.6
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -268,12 +338,12 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=159.89.182.67:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇺🇸 美国-02 | 西海岸直连骨干"
     type: vless
-    server: 104.19.192.155
+    server: 104.16.150.70
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -282,7 +352,7 @@ proxies:
     sni: edgetunnel.pages.dev
     client-fingerprint: chrome
     ws-opts:
-      path: "/?proxyip=143.198.52.252:443&ed=2560"
+      path: "/?ed=2560"
       headers:
         Host: edgetunnel.pages.dev
 
@@ -294,24 +364,29 @@ proxy-groups:
       - 🌍 欧洲节点
       - 🌏 亚太节点
       - 🌎 美洲节点
-      - "🇨🇭 瑞士-01 | 苏黎世中立高速"
-      - "🇨🇭 瑞士-02 | 苏黎世中立高速"
+      - "🇨🇭 瑞士-01 | 苏黎世中立专线"
+      - "🇨🇭 瑞士-02 | 苏黎世中立专线"
       - "🇱🇺 卢森堡-01 | 欧洲金融核心"
-      - "🇫🇷 法国-01 | 巴黎欧洲骨干"
-      - "🇩🇪 德国-01 | 法兰克福直连"
-      - "🇩🇪 德国-02 | 法兰克福直连"
+      - "🇱🇺 卢森堡-02 | 欧洲金融核心"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心"
+      - "🇩🇪 德国-01 | 法兰克福骨干"
+      - "🇩🇪 德国-02 | 法兰克福骨干"
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
-      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
-      - "🇵🇱 波兰-01 | 华沙东欧节点"
-      - "🇵🇱 波兰-02 | 华沙东欧节点"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干"
       - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线"
       - "🇨🇦 加拿大-01 | 多伦多北美直连"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连"
       - "🇯🇵 日本-01 | 东京亚太优化"
       - "🇯🇵 日本-02 | 东京亚太优化"
       - "🇰🇷 韩国-01 | 首尔高速专线"
+      - "🇰🇷 韩国-02 | 首尔高速专线"
       - "🇺🇸 美国-01 | 西海岸直连骨干"
       - "🇺🇸 美国-02 | 西海岸直连骨干"
       - DIRECT
@@ -322,56 +397,66 @@ proxy-groups:
     interval: 300
     tolerance: 50
     proxies:
-      - "🇨🇭 瑞士-01 | 苏黎世中立高速"
-      - "🇨🇭 瑞士-02 | 苏黎世中立高速"
+      - "🇨🇭 瑞士-01 | 苏黎世中立专线"
+      - "🇨🇭 瑞士-02 | 苏黎世中立专线"
       - "🇱🇺 卢森堡-01 | 欧洲金融核心"
-      - "🇫🇷 法国-01 | 巴黎欧洲骨干"
-      - "🇩🇪 德国-01 | 法兰克福直连"
-      - "🇩🇪 德国-02 | 法兰克福直连"
+      - "🇱🇺 卢森堡-02 | 欧洲金融核心"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心"
+      - "🇩🇪 德国-01 | 法兰克福骨干"
+      - "🇩🇪 德国-02 | 法兰克福骨干"
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
-      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
-      - "🇵🇱 波兰-01 | 华沙东欧节点"
-      - "🇵🇱 波兰-02 | 华沙东欧节点"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干"
       - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线"
       - "🇨🇦 加拿大-01 | 多伦多北美直连"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连"
       - "🇯🇵 日本-01 | 东京亚太优化"
       - "🇯🇵 日本-02 | 东京亚太优化"
       - "🇰🇷 韩国-01 | 首尔高速专线"
+      - "🇰🇷 韩国-02 | 首尔高速专线"
       - "🇺🇸 美国-01 | 西海岸直连骨干"
       - "🇺🇸 美国-02 | 西海岸直连骨干"
 
   - name: 🌍 欧洲节点
     type: select
     proxies:
-      - "🇨🇭 瑞士-01 | 苏黎世中立高速"
-      - "🇨🇭 瑞士-02 | 苏黎世中立高速"
+      - "🇨🇭 瑞士-01 | 苏黎世中立专线"
+      - "🇨🇭 瑞士-02 | 苏黎世中立专线"
       - "🇱🇺 卢森堡-01 | 欧洲金融核心"
-      - "🇫🇷 法国-01 | 巴黎欧洲骨干"
-      - "🇩🇪 德国-01 | 法兰克福直连"
-      - "🇩🇪 德国-02 | 法兰克福直连"
+      - "🇱🇺 卢森堡-02 | 欧洲金融核心"
+      - "🇫🇷 法国-01 | 巴黎欧洲核心"
+      - "🇫🇷 法国-02 | 巴黎欧洲核心"
+      - "🇩🇪 德国-01 | 法兰克福骨干"
+      - "🇩🇪 德国-02 | 法兰克福骨干"
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
-      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
-      - "🇵🇱 波兰-01 | 华沙东欧节点"
-      - "🇵🇱 波兰-02 | 华沙东欧节点"
+      - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
+      - "🇵🇱 波兰-01 | 华沙东欧骨干"
+      - "🇵🇱 波兰-02 | 华沙东欧骨干"
 
   - name: 🌏 亚太节点
     type: select
     proxies:
       - "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线"
+      - "🇦🇺 澳大利亚-02 | 悉尼大洋洲专线"
       - "🇯🇵 日本-01 | 东京亚太优化"
       - "🇯🇵 日本-02 | 东京亚太优化"
       - "🇰🇷 韩国-01 | 首尔高速专线"
+      - "🇰🇷 韩国-02 | 首尔高速专线"
 
   - name: 🌎 美洲节点
     type: select
     proxies:
       - "🇨🇦 加拿大-01 | 多伦多北美直连"
+      - "🇨🇦 加拿大-02 | 多伦多北美直连"
       - "🇺🇸 美国-01 | 西海岸直连骨干"
       - "🇺🇸 美国-02 | 西海岸直连骨干"
 

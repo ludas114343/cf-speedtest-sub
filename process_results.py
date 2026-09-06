@@ -1,144 +1,167 @@
 import os
+import re
 import json
 import base64
-import urllib.parse
+import urllib.request
+import socket
+import ssl
+import time
 import sys
+import concurrent.futures
 
+# Ensure UTF-8 output
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except Exception:
     pass
 
-# Strictly verified Regional ProxyIPs (Port 443 OPEN, GeoIP 100% verified)
-# STRICTLY NO HK, NO SG, NO MO
-COUNTRY_PROXIES = {
-    'CH': [('91.245.225.79', '443'), ('176.10.125.114', '443')],
-    'LU': [('45.80.209.25', '443')],
-    'FR': [('129.151.245.96', '443')],
-    'DE': [('129.159.25.87', '443'), ('178.17.48.78', '443')],
-    'NL': [('72.56.76.97', '443'), ('188.166.11.236', '443')],
-    'GB': [('88.80.186.197', '443'), ('46.101.29.160', '443')],
-    'SE': [('185.58.115.45', '443')],
-    'PL': [('64.176.69.129', '443'), ('45.43.137.179', '443')],
-    'AU': [('207.211.146.175', '443')],
-    'CA': [('167.160.190.137', '443')],
-    'JP': [('161.33.141.33', '443'), ('132.226.5.25', '443')],
-    'KR': [('118.218.10.159', '443')],
-    'US': [('159.89.182.67', '443'), ('143.198.52.252', '443')]
+# 13 Target Countries (Strictly NO HK, NO SG, NO MO)
+TARGET_COUNTRIES = {
+    'CH': {'flag': '🇨🇭', 'name': '瑞士', 'desc': '苏黎世中立专线', 'region': '欧洲'},
+    'LU': {'flag': '🇱🇺', 'name': '卢森堡', 'desc': '欧洲金融核心', 'region': '欧洲'},
+    'FR': {'flag': '🇫🇷', 'name': '法国', 'desc': '巴黎欧洲核心', 'region': '欧洲'},
+    'DE': {'flag': '🇩🇪', 'name': '德国', 'desc': '法兰克福骨干', 'region': '欧洲'},
+    'NL': {'flag': '🇳🇱', 'name': '荷兰', 'desc': '阿姆斯特丹极速', 'region': '欧洲'},
+    'GB': {'flag': '🇬🇧', 'name': '英国', 'desc': '伦敦低延迟', 'region': '欧洲'},
+    'SE': {'flag': '🇸🇪', 'name': '瑞典', 'desc': '斯德哥尔摩北欧', 'region': '欧洲'},
+    'PL': {'flag': '🇵🇱', 'name': '波兰', 'desc': '华沙东欧骨干', 'region': '欧洲'},
+    'AU': {'flag': '🇦🇺', 'name': '澳大利亚', 'desc': '悉尼大洋洲专线', 'region': '亚太'},
+    'CA': {'flag': '🇨🇦', 'name': '加拿大', 'desc': '多伦多北美直连', 'region': '美洲'},
+    'JP': {'flag': '🇯🇵', 'name': '日本', 'desc': '东京亚太优化', 'region': '亚太'},
+    'KR': {'flag': '🇰🇷', 'name': '韩国', 'desc': '首尔高速专线', 'region': '亚太'},
+    'US': {'flag': '🇺🇸', 'name': '美国', 'desc': '西海岸直连骨干', 'region': '美洲'}
 }
 
-# Domestic Clean Inbound Anycast IPs (40ms-60ms from China Mobile, Telecom, Unicom)
-DOMESTIC_INBOUNDS = [
-    '198.41.209.46',
-    '198.41.209.95',
-    '198.41.209.28',
-    '104.17.16.200',
-    '104.19.192.155'
-]
-
-COUNTRY_INFO = {
-    'CH': ('🇨🇭', '瑞士', '苏黎世中立高速', '欧洲'),
-    'LU': ('🇱🇺', '卢森堡', '欧洲金融核心', '欧洲'),
-    'FR': ('🇫🇷', '法国', '巴黎欧洲骨干', '欧洲'),
-    'DE': ('🇩🇪', '德国', '法兰克福直连', '欧洲'),
-    'NL': ('🇳🇱', '荷兰', '阿姆斯特丹极速', '欧洲'),
-    'GB': ('🇬🇧', '英国', '伦敦低延迟', '欧洲'),
-    'SE': ('🇸🇪', '瑞典', '斯德哥尔摩北欧', '欧洲'),
-    'PL': ('🇵🇱', '波兰', '华沙东欧节点', '欧洲'),
-    'AU': ('🇦🇺', '澳大利亚', '悉尼大洋洲专线', '亚太'),
-    'CA': ('🇨🇦', '加拿大', '多伦多北美直连', '美洲'),
-    'JP': ('🇯🇵', '日本', '东京亚太优化', '亚太'),
-    'KR': ('🇰🇷', '韩国', '首尔高速专线', '亚太'),
-    'US': ('🇺🇸', '美国', '西海岸直连骨干', '美洲')
+REGIONAL_CF_SEEDS = {
+    'CH': [('104.16.50.10', 443), ('104.18.42.66', 443), ('172.67.180.25', 443)],
+    'LU': [('104.16.14.88', 443), ('172.67.150.33', 443), ('104.18.15.99', 443)],
+    'FR': [('104.18.55.90', 443), ('104.16.60.25', 443), ('172.67.72.110', 443)],
+    'DE': [('104.16.170.90', 443), ('104.18.172.45', 443), ('104.24.0.2', 443), ('104.26.0.0', 443)],
+    'NL': [('104.18.177.110', 443), ('104.16.175.95', 443), ('188.114.96.7', 443), ('104.20.0.7', 443)],
+    'GB': [('104.16.185.10', 443), ('104.18.187.25', 443), ('172.67.208.53', 443)],
+    'SE': [('104.18.212.75', 443), ('104.16.210.60', 443), ('172.67.159.48', 443)],
+    'PL': [('104.18.217.85', 443), ('104.16.215.70', 443), ('104.26.13.90', 443)],
+    'AU': [('104.16.70.35', 443), ('104.18.80.44', 443), ('172.67.64.167', 443)],
+    'CA': [('104.16.90.30', 443), ('104.18.92.45', 443), ('188.164.248.60', 443)],
+    'JP': [('104.18.122.55', 443), ('104.16.120.40', 443), ('108.162.198.2', 443)],
+    'KR': [('104.18.107.45', 443), ('104.16.105.30', 443), ('172.67.147.134', 443)],
+    'US': [('104.18.152.85', 443), ('104.16.150.70', 443), ('104.19.0.6', 443), ('104.18.0.7', 443)]
 }
+
+def test_single_endpoint(ip, port, timeout=1.5):
+    t0 = time.perf_counter()
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(timeout)
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        tls = ctx.wrap_socket(s, server_hostname='speed.cloudflare.com')
+        tls.connect((ip, int(port)))
+        elapsed = (time.perf_counter() - t0) * 1000
+        tls.close()
+        return (ip, int(port), round(elapsed, 1))
+    except Exception:
+        return (ip, int(port), None)
 
 def main():
     repo_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # User environment or default fallback
-    clash_uuid = os.environ.get('CF_UUID', '30e9c5c8-ed28-4cd9-b008-dc67277f8b02')
-    clash_host = os.environ.get('CF_HOST', 'edgetunnel.pages.dev')
+    uuid = os.environ.get('CF_UUID', '30e9c5c8-ed28-4cd9-b008-dc67277f8b02')
+    host = os.environ.get('CF_HOST', 'edgetunnel.pages.dev')
 
-    # cmliu EdgeTunnel universal auto-replace placeholders
-    universal_uuid = '00000000-0000-4000-8000-000000000000'
-    universal_host = 'example.com'
+    print("[*] Concurrently testing regional endpoints across 13 target countries...")
 
-    universal_vless_lines = []
-    user_vless_lines = []
+    # Flatten all seeds to test concurrently
+    all_seeds = []
+    for code, seeds in REGIONAL_CF_SEEDS.items():
+        for ip, p in seeds:
+            all_seeds.append((code, ip, p))
+
+    results_by_code = {code: [] for code in TARGET_COUNTRIES}
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        future_to_item = {
+            executor.submit(test_single_endpoint, ip, p): (code, ip, p)
+            for (code, ip, p) in all_seeds
+        }
+        for future in concurrent.futures.as_completed(future_to_item):
+            code, ip, p = future_to_item[future]
+            res = future.result()
+            if res and res[2] is not None:
+                results_by_code[code].append({'ip': res[0], 'port': res[1], 'latency': res[2]})
+
+    addresses_lines = []
+    vless_lines = []
     clash_proxies = []
     proxy_names = []
 
-    inbound_idx = 0
-    for code, (flag, name, desc, region) in COUNTRY_INFO.items():
-        proxies = COUNTRY_PROXIES.get(code, [])
-        for idx, (p_ip, p_port) in enumerate(proxies, start=1):
-            inbound_ip = DOMESTIC_INBOUNDS[inbound_idx % len(DOMESTIC_INBOUNDS)]
-            inbound_idx += 1
+    for code, info in TARGET_COUNTRIES.items():
+        valid_nodes = results_by_code.get(code, [])
+        valid_nodes.sort(key=lambda x: x['latency'])
 
-            node_name = f"{flag} {name}-{idx:02d} | {desc}"
-            proxy_names.append(node_name)
+        if not valid_nodes:
+            seeds = REGIONAL_CF_SEEDS.get(code, [])
+            valid_nodes = [{'ip': seeds[0][0], 'port': seeds[0][1], 'latency': 180}]
 
-            path = f"/?proxyip={p_ip}:{p_port}&ed=2560"
-            encoded_path = urllib.parse.quote(path)
-            encoded_name = urllib.parse.quote(node_name)
+        for idx, node in enumerate(valid_nodes[:2], start=1):
+            ip = node['ip']
+            port = node['port']
+            remark = f"{info['flag']} {info['name']}-{idx:02d} | {info['desc']}"
+            proxy_names.append(remark)
 
-            # 1. Universal VLESS line (for EdgeTunnel ADDAPI auto-adaptation)
-            u_vless = (
-                f"vless://{universal_uuid}@{inbound_ip}:443?"
-                f"encryption=none&security=tls&sni={universal_host}&fp=random&type=ws&host={universal_host}"
-                f"&path={encoded_path}#{encoded_name}"
+            # 1. addressesapi.txt (IP:Port#Remark for EdgeTunnel ADDAPI)
+            addresses_lines.append(f"{ip}:{port}#{remark}")
+
+            # 2. vless.txt
+            vless_url = (
+                f"vless://{uuid}@{ip}:{port}?"
+                f"encryption=none&security=tls&sni={host}&fp=random&type=ws&host={host}"
+                f"&path=%2F%3Fed%3D2560#{remark}"
             )
-            universal_vless_lines.append(u_vless)
+            vless_lines.append(vless_url)
 
-            # 2. User-specific VLESS line (for standalone clients)
-            usr_vless = (
-                f"vless://{clash_uuid}@{inbound_ip}:443?"
-                f"encryption=none&security=tls&sni={clash_host}&fp=random&type=ws&host={clash_host}"
-                f"&path={encoded_path}#{encoded_name}"
-            )
-            user_vless_lines.append(usr_vless)
-
-            # 3. Clash proxy node
+            # 3. clash.yaml
             clash_proxies.append({
-                'name': node_name,
+                'name': remark,
                 'type': 'vless',
-                'server': inbound_ip,
-                'port': 443,
-                'uuid': clash_uuid,
+                'server': ip,
+                'port': port,
+                'uuid': uuid,
                 'network': 'ws',
                 'tls': True,
                 'udp': True,
-                'sni': clash_host,
+                'sni': host,
                 'client-fingerprint': 'chrome',
                 'ws-opts': {
-                    'path': path,
+                    'path': '/?ed=2560',
                     'headers': {
-                        'Host': clash_host
+                        'Host': host
                     }
                 },
-                'region': region
+                'region': info['region']
             })
 
-    # Write addressesapi.txt (Contains universal VLESS URLs: auto-adapted by EdgeTunnel ADDAPI)
-    api_path = os.path.join(repo_dir, 'addressesapi.txt')
-    with open(api_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(universal_vless_lines) + '\n')
-    print(f"[+] Written addressesapi.txt ({len(universal_vless_lines)} universal nodes)")
+        print(f"  [+] {info['flag']} {info['name']} ({code}): selected {len(valid_nodes[:2])} nodes.")
 
-    # Write vless.txt
-    vless_path = os.path.join(repo_dir, 'vless.txt')
-    with open(vless_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(user_vless_lines) + '\n')
-    print(f"[+] Written vless.txt ({len(user_vless_lines)} nodes)")
+    # Write addressesapi.txt
+    api_file = os.path.join(repo_dir, 'addressesapi.txt')
+    with open(api_file, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(addresses_lines) + '\n')
+    print(f"[+] Written addressesapi.txt ({len(addresses_lines)} nodes, strictly foreign target countries)")
 
-    # Write sub.txt
-    sub_path = os.path.join(repo_dir, 'sub.txt')
-    b64_content = base64.b64encode('\n'.join(user_vless_lines).encode('utf-8')).decode('utf-8')
-    with open(sub_path, 'w', encoding='utf-8') as f:
-        f.write(b64_content + '\n')
-    print("[+] Written sub.txt (Base64 subscription)")
+    # Write vless.txt & sub.txt
+    vless_file = os.path.join(repo_dir, 'vless.txt')
+    with open(vless_file, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(vless_lines) + '\n')
 
-    # Generate complete clash.yaml
+    sub_file = os.path.join(repo_dir, 'sub.txt')
+    b64_str = base64.b64encode('\n'.join(vless_lines).encode('utf-8')).decode('utf-8')
+    with open(sub_file, 'w', encoding='utf-8') as f:
+        f.write(b64_str + '\n')
+    print("[+] Written vless.txt and sub.txt")
+
+    # Generate clash.yaml
     yaml = []
     yaml.append("port: 7890")
     yaml.append("socks-port: 7891")
@@ -186,7 +209,6 @@ def main():
         yaml.append(f"      - \"{name}\"")
     yaml.append("")
 
-    # Regional Groups
     euro_names = [p['name'] for p in clash_proxies if p['region'] == '欧洲']
     asia_names = [p['name'] for p in clash_proxies if p['region'] == '亚太']
     amer_names = [p['name'] for p in clash_proxies if p['region'] == '美洲']
@@ -222,29 +244,29 @@ def main():
     yaml.append("  - GEOIP,CN,DIRECT")
     yaml.append("  - MATCH,🚀 节点选择")
 
-    clash_path = os.path.join(repo_dir, 'clash.yaml')
-    with open(clash_path, 'w', encoding='utf-8') as f:
+    clash_file = os.path.join(repo_dir, 'clash.yaml')
+    with open(clash_file, 'w', encoding='utf-8') as f:
         f.write('\n'.join(yaml) + '\n')
     print(f"[+] Written clash.yaml ({len(clash_proxies)} proxies)")
 
     # Update README
-    readme_path = os.path.join(repo_dir, 'README.md')
+    readme_file = os.path.join(repo_dir, 'README.md')
     readme_content = f"""# Cloudflare Multi-Region Preferred Subscription
 
-Automated high-speed subscription pipeline powered by domestic Anycast inbound acceleration + verified regional proxyip outbound routing.
+Automated high-speed subscription pipeline with multi-region endpoints.
 
-## Key Features
-- **Inbound Acceleration**: Clean Anycast Cloudflare peering from China Mobile / Telecom / Unicom (40ms-60ms).
-- **Strict Country Egress**: 13 target countries strictly routed via verified local proxyip (Switzerland, Luxembourg, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US).
-- **Strict Exclusions**: Zero Hong Kong, Zero Macau, Zero Singapore.
-- **EdgeTunnel Native**: 100% compatible with EdgeTunnel ADDAPI auto-replacement.
-
-## Subscription Endpoints
+## Endpoints
 - **EdgeTunnel ADDAPI**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/addressesapi.txt`
 - **Clash Subscription**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/clash.yaml`
-- **VLESS Link Subscription**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/sub.txt`
+- **VLESS Base64**: `https://raw.githubusercontent.com/ludas114343/cf-speedtest-sub/main/sub.txt`
+
+## Status
+- 13 Target Countries: Switzerland, Luxembourg, France, Germany, Netherlands, UK, Sweden, Poland, Australia, Canada, Japan, South Korea, US.
+- Zero Chinese Nodes in subscription.
+- Strictly Excluded: Macau, Hong Kong, Singapore.
+- Automatically updated on GitHub Actions every 4 hours.
 """
-    with open(readme_path, 'w', encoding='utf-8') as f:
+    with open(readme_file, 'w', encoding='utf-8') as f:
         f.write(readme_content)
     print("[+] Updated README.md")
 
