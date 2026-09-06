@@ -262,25 +262,23 @@ def test_single_endpoint(ip, port, expected_cc):
 
 def scan_country_pool(cfg):
     cc = cfg['code']
-    pools = load_all_candidates()
-    candidates = pools.get(cc, [])
-    if not candidates:
-        candidates = list(cfg.get('seeds', []))
+    seeds = list(cfg.get('seeds', []))
     
-    test_batch = candidates[:30]
+    # Test official Cloudflare regional Anycast seeds first
     verified = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
-        futures = {ex.submit(test_single_endpoint, ip, p, cc): (ip, p) for ip, p in test_batch}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
+        futures = {ex.submit(test_single_endpoint, ip, p, cc): (ip, p) for ip, p in seeds}
         for f in concurrent.futures.as_completed(futures):
             res = f.result()
             if res:
                 verified.append(res)
     
-    # Sort by lowest latency, then highest speed
-    verified.sort(key=lambda x: (x['latency_ms'], -x['speed_mbps']))
     if verified:
+        verified.sort(key=lambda x: (x['latency_ms'], -x['speed_mbps']))
         return [(v['ip'], v['port']) for v in verified[:2]]
-    return candidates[:2]
+    
+    # Fallback to seeds directly
+    return seeds[:2]
 
 def main():
     print('[*] Fetching best China mainland / domestic Cloudflare low-latency inbound nodes...')
