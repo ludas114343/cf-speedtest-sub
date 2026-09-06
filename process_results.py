@@ -191,6 +191,12 @@ def collect_candidates():
 
     return candidates
 
+def node_rank(x):
+    # Heavily penalize slow nodes (< 5.0 Mbps)
+    speed_penalty = 1000.0 if x.get('speed', 0) < 5.0 else 0.0
+    # Prefer low latency, high speed
+    return speed_penalty + x.get('latency', 200.0) - (x.get('speed', 0) * 0.5)
+
 def main():
     repo_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -200,7 +206,7 @@ def main():
     print("[*] Starting Cloudflare Multi-Region Speedtest & Subscription Generator...")
     raw_candidates = collect_candidates()
 
-    # Deduplicate candidates per country
+    # Deduplicate candidates per country and rank by performance
     deduped = {}
     for code, pool in raw_candidates.items():
         seen_ips = set()
@@ -209,7 +215,7 @@ def main():
             if item['ip'] not in seen_ips:
                 seen_ips.add(item['ip'])
                 unique.append(item)
-        unique.sort(key=lambda x: (x['latency'], -x['speed']))
+        unique.sort(key=node_rank)
         deduped[code] = unique
         print(f"  - {code}: {len(unique)} unique candidates")
 
@@ -219,7 +225,7 @@ def main():
 
     test_tasks = []
     for code in TARGET_COUNTRIES:
-        for item in deduped.get(code, [])[:8]:
+        for item in deduped.get(code, [])[:15]:
             test_tasks.append((code, item))
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
@@ -250,11 +256,12 @@ def main():
     print("\n=== Final 13 Target Country Selection (Top 2 per country) ===")
     for code, info in TARGET_COUNTRIES.items():
         v_pool = verified_by_country.get(code, [])
-        v_pool.sort(key=lambda x: (x['latency'], -x['speed']))
+        v_pool.sort(key=node_rank)
 
         selected = v_pool[:2]
         if len(selected) < 2:
             remaining = [x for x in deduped.get(code, []) if x not in selected]
+            remaining.sort(key=node_rank)
             selected.extend(remaining[:2 - len(selected)])
 
         final_nodes_by_country[code] = selected
