@@ -39,7 +39,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=38.180.84.46:443&ed=2048"
+      path: "/?proxyip=38.180.85.203:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -53,7 +53,21 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=45.80.209.25:81&ed=2048"
+      path: "/?proxyip=172.67.150.33:443&ed=2048"
+      headers:
+        Host: edgetunnel.pages.dev
+    udp: true
+  - name: "🇱🇺 卢森堡-02 | 金融中心"
+    type: vless
+    server: 172.64.229.36
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    cipher: auto
+    tls: true
+    servername: edgetunnel.pages.dev
+    network: ws
+    ws-opts:
+      path: "/?proxyip=104.16.14.88:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -81,7 +95,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=45.80.215.221:2053&ed=2048"
+      path: "/?proxyip=45.80.215.221:2096&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -95,7 +109,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=147.45.197.163:50080&ed=2048"
+      path: "/?proxyip=49.13.71.10:2087&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -109,7 +123,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=51.195.117.115:2053&ed=2048"
+      path: "/?proxyip=49.12.47.52:2053&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -123,7 +137,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=45.94.31.75:2004&ed=2048"
+      path: "/?proxyip=185.51.247.96:8443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -137,7 +151,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=45.94.31.75:1005&ed=2048"
+      path: "/?proxyip=185.233.202.195:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -165,7 +179,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=45.140.167.225:443&ed=2048"
+      path: "/?proxyip=185.66.164.51:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -179,7 +193,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=77.91.84.225:443&ed=2048"
+      path: "/?proxyip=89.22.224.125:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -193,7 +207,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=89.22.229.178:443&ed=2048"
+      path: "/?proxyip=79.137.248.111:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -207,7 +221,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=70.34.244.250:12531&ed=2048"
+      path: "/?proxyip=91.149.253.249:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -221,7 +235,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=70.34.244.250:53062&ed=2048"
+      path: "/?proxyip=37.233.102.53:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -235,7 +249,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=125.7.24.251:443&ed=2048"
+      path: "/?proxyip=104.16.70.35:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -249,7 +263,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=161.33.237.158:443&ed=2048"
+      path: "/?proxyip=104.18.80.44:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -263,7 +277,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=192.99.54.60:443&ed=2048"
+      path: "/?proxyip=38.180.127.82:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -277,7 +291,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=38.180.127.82:443&ed=2048"
+      path: "/?proxyip=192.99.54.60:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -291,7 +305,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=198.13.42.58:32954&ed=2048"
+      path: "/?proxyip=168.138.197.97:8443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -305,7 +319,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=158.101.146.3:54516&ed=2048"
+      path: "/?proxyip=94.177.131.183:8443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -319,7 +333,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=119.201.123.21:30001&ed=2048"
+      path: "/?proxyip=132.145.81.4:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -333,7 +347,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=220.80.128.180:10435&ed=2048"
+      path: "/?proxyip=138.2.122.191:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -347,7 +361,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=23.94.122.243:26496&ed=2048"
+      path: "/?proxyip=45.11.93.113:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -361,7 +375,7 @@ proxies:
     servername: edgetunnel.pages.dev
     network: ws
     ws-opts:
-      path: "/?proxyip=173.249.203.187:24022&ed=2048"
+      path: "/?proxyip=150.136.240.243:443&ed=2048"
       headers:
         Host: edgetunnel.pages.dev
     udp: true
@@ -378,6 +392,7 @@ proxy-groups:
       - "🇨🇭 瑞士-01 | 隐私中立"
       - "🇨🇭 瑞士-02 | 隐私中立"
       - "🇱🇺 卢森堡-01 | 金融中心"
+      - "🇱🇺 卢森堡-02 | 金融中心"
       - "🇫🇷 法国-01 | 巴黎欧洲核心"
       - "🇫🇷 法国-02 | 巴黎欧洲核心"
       - "🇩🇪 德国-01 | 法兰克福骨干"
@@ -410,6 +425,7 @@ proxy-groups:
       - "🇨🇭 瑞士-01 | 隐私中立"
       - "🇨🇭 瑞士-02 | 隐私中立"
       - "🇱🇺 卢森堡-01 | 金融中心"
+      - "🇱🇺 卢森堡-02 | 金融中心"
       - "🇫🇷 法国-01 | 巴黎欧洲核心"
       - "🇫🇷 法国-02 | 巴黎欧洲核心"
       - "🇩🇪 德国-01 | 法兰克福骨干"
@@ -445,6 +461,7 @@ proxy-groups:
       - "🇨🇭 瑞士-01 | 隐私中立"
       - "🇨🇭 瑞士-02 | 隐私中立"
       - "🇱🇺 卢森堡-01 | 金融中心"
+      - "🇱🇺 卢森堡-02 | 金融中心"
       - "🇫🇷 法国-01 | 巴黎欧洲核心"
       - "🇫🇷 法国-02 | 巴黎欧洲核心"
       - "🇩🇪 德国-01 | 法兰克福骨干"
