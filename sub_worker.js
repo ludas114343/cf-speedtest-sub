@@ -26,8 +26,15 @@ export default {
       // 容灾兜底
     }
 
-    if (!rawText.trim()) {
-      rawText = `104.16.12.22:443#🇲🇴 澳门 [MFM] 18.5M 64ms\n104.16.50.10:443#🇨🇭 瑞士苏黎世 [ZRH] 19.2M 162ms\n172.67.150.33:443#🇱🇺 卢森堡 [LUX] 15.2M 174ms\n104.16.105.30:443#🇰🇷 韩国首尔 [ICN] 28.4M 42ms\n104.16.120.40:443#🇯🇵 日本东京 [NRT] 31.2M 61ms\n104.16.130.50:443#🇸🇬 新加坡 [SIN] 27.8M 65ms\n104.16.140.60:443#🇭🇰 中国香港 [HKG] 34.2M 35ms\n104.16.150.70:443#🇺🇸 美国洛杉矶 [LAX] 24.5M 135ms`;
+        if (!rawText.trim()) {
+      rawText = `bestcf.030101.xyz:443#⚡ 国内极速优选 | 三网自适应
+cf.090227.xyz:443#⚡ 亚太骨干直连
+172.64.229.36:443#⚡ 电信低延迟Anycast 63ms
+104.16.50.10:443#🇨🇭 瑞士苏黎世 [ZRH] 162ms
+172.67.150.33:443#🇱🇺 卢森堡 [LUX] 174ms
+104.16.105.30:443#🇰🇷 韩国首尔 [ICN] 42ms
+104.16.120.40:443#🇯🇵 日本东京 [NRT] 61ms
+104.16.150.70:443#🇺🇸 美国洛杉矶 [LAX] 135ms`;
     }
 
     // 模式 1: 纯文本输出 (供 EdgeTunnel ADDAPI 消费)
@@ -89,8 +96,7 @@ export default {
       }).join("\n");
 
       const allNames = nodes.map(n => `      - "${n.remark}"`).join("\n");
-      const macauNames = nodes.filter(n => n.remark.includes("澳门") || n.remark.includes("MFM")).map(n => `      - "${n.remark}"`).join("\n");
-      const neutralNames = nodes.filter(n => n.remark.includes("瑞士") || n.remark.includes("卢森堡") || n.remark.includes("ZRH") || n.remark.includes("LUX")).map(n => `      - "${n.remark}"`).join("\n");
+            const neutralNames = nodes.filter(n => n.remark.includes("瑞士") || n.remark.includes("卢森堡") || n.remark.includes("ZRH") || n.remark.includes("LUX")).map(n => `      - "${n.remark}"`).join("\n");
       const asiaNames = nodes.filter(n => n.remark.includes("日本") || n.remark.includes("香港") || n.remark.includes("韩国") || n.remark.includes("新加坡")).map(n => `      - "${n.remark}"`).join("\n");
 
       const clashConfig = `port: 7890
@@ -107,7 +113,6 @@ proxy-groups:
     type: select
     proxies:
       - "⚡ 自动优选 (最低延迟)"
-      - "🇲🇴 澳门专线 (YouTube免广告)"
       - "🇨🇭 欧洲中立区 (瑞士/卢森堡)"
       - "🌏 亚太高速"
 ${allNames}
@@ -119,11 +124,6 @@ ${allNames}
     tolerance: 50
     proxies:
 ${allNames}
-
-  - name: "🇲🇴 澳门专线 (YouTube免广告)"
-    type: select
-    proxies:
-${macauNames || allNames}
 
   - name: "🇨🇭 欧洲中立区 (瑞士/卢森堡)"
     type: select

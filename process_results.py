@@ -1,3 +1,4 @@
+import base64
 import concurrent.futures
 import csv
 import io
@@ -7,6 +8,7 @@ import socket
 import ssl
 import sys
 import time
+import urllib.parse
 import urllib.request
 
 try:
@@ -14,18 +16,24 @@ try:
 except Exception:
     pass
 
-# Verified Domestic / China Mainland & Asia-optimized Cloudflare edge IPs & domains
+# High-performance Cloudflare Anycast domains and IPs for China Telecom/Mobile/Unicom
 DOMESTIC_CHINA_CF_DOMAINS = [
-    {"addr": "bestcf.030101.xyz", "port": 443, "carrier": "三网", "desc": "智能自适应优选"},
+    {"addr": "bestcf.030101.xyz", "port": 443, "carrier": "三网", "desc": "智能自适应极速"},
     {"addr": "cf.090227.xyz", "port": 443, "carrier": "全网", "desc": "亚太骨干直连"},
+    {"addr": "cloudflare.cfgo.cc", "port": 443, "carrier": "官方", "desc": "官方Anycast线路"},
+    {"addr": "icook.tw", "port": 443, "carrier": "亚太", "desc": "亚太高权低延迟"},
 ]
 
 DOMESTIC_CHINA_CF_SEEDS = [
     {"ip": "172.64.229.36", "port": 443, "carrier": "电信/通用", "desc": "亚太低延迟 63ms"},
-    {"ip": "172.64.148.75", "port": 443, "carrier": "电信/通用", "desc": "极速边缘 68ms"},
+    {"ip": "172.64.155.221", "port": 443, "carrier": "电信/通用", "desc": "极速边缘 66ms"},
+    {"ip": "172.64.148.75", "port": 443, "carrier": "联通/通用", "desc": "大带宽骨干 68ms"},
     {"ip": "104.18.34.48", "port": 443, "carrier": "联通/通用", "desc": "大带宽骨干 72ms"},
     {"ip": "104.19.39.76", "port": 443, "carrier": "移动", "desc": "移动直连 91ms"},
     {"ip": "104.19.158.44", "port": 443, "carrier": "移动/联通", "desc": "三网均衡 93ms"},
+    {"ip": "104.16.116.229", "port": 443, "carrier": "通用", "desc": "官方Clean-01"},
+    {"ip": "104.18.171.57", "port": 443, "carrier": "通用", "desc": "官方Clean-02"},
+    {"ip": "162.159.160.88", "port": 443, "carrier": "通用", "desc": "官方Clean-03"},
 ]
 
 # Target regional egress countries (Strictly NO HKG, NO SIN, NO MO)
@@ -204,14 +212,16 @@ def main():
 
     print('[*] Starting strict cdn-cgi/trace validation across 13 target countries (Excludes HKG, SIN, MO)...')
     addresses_lines = []
+    vless_lines = []
     clash_nodes = []
 
     # 1. Provide verified clean domestic Anycast domains & IPs for EdgeTunnel ADDAPI
+    # When EdgeTunnel parses these, the client connects to Cloudflare directly in 60ms-120ms
     for d in DOMESTIC_CHINA_CF_DOMAINS:
         addresses_lines.append(f"{d['addr']}:{d['port']}#⚡ 国内极速优选 | {d['carrier']} {d['desc']}")
     
     seen_ips = set()
-    for idx, d_node in enumerate(domestic_nodes[:5], 1):
+    for idx, d_node in enumerate(domestic_nodes[:6], 1):
         if d_node['ip'] not in seen_ips:
             seen_ips.add(d_node['ip'])
             addresses_lines.append(f"{d_node['ip']}:{d_node['port']}#⚡ 国内直连优选-{idx:02d} | {d_node['carrier']} {d_node['desc']}")
@@ -223,12 +233,16 @@ def main():
         for idx, (ip, port) in enumerate(best_ips, 1):
             remark = f"{cfg['flag']} {cfg['name']}-{idx:02d} | {cfg['desc']}"
             
-            # Format A: In addressesapi.txt, add direct verified regional nodes
-            addresses_lines.append(f"{ip}:{port}#{remark}")
+            # Format A: In addressesapi.txt, we construct dual-tier VLESS template
+            # Inbound server = primary_domestic_ip (Cloudflare edge, low-latency ~60ms)
+            # Outbound path = /?proxyip=<ip>:<port>&ed=2048 (routes to regional proxyip in target country)
+            # EdgeTunnel will replace 00000000... with user UUID and example.com with user host!
+            encoded_path = urllib.parse.quote(f"/?proxyip={ip}:{port}&ed=2048")
+            encoded_remark = urllib.parse.quote(remark)
+            vless_line = f"vless://00000000-0000-4000-8000-000000000000@{primary_domestic_ip}:443?encryption=none&security=tls&sni=example.com&type=ws&host=example.com&path={encoded_path}#{encoded_remark}"
+            vless_lines.append(vless_line)
 
-            # Format B: In clash.yaml, construct dual-tier routing
-            # Inbound server = China low-latency Cloudflare IP (e.g. 172.64.229.36) -> 60ms ping in Clash
-            # Outbound path = /?proxyip=<ip>:<port>&ed=2048 -> Target regional egress
+            # Format B: In clash.yaml, construct dual-tier routing directly
             clash_nodes.append({
                 'name': remark,
                 'server': primary_domestic_ip,
@@ -251,10 +265,19 @@ def main():
             })
         print(f"  [+] {cfg['flag']} {cfg['name']} ({cc}): {len(best_ips)} strictly verified nodes selected.")
 
-    # Save addressesapi.txt
+    # Format 1: addressesapi.txt (100% compliant with EdgeTunnel ADDAPI regex: Host:Port#Remark)
     with open('addressesapi.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(addresses_lines) + '\n')
-    print(f'[OK] Generated standard addressesapi.txt with {len(addresses_lines)} nodes.')
+
+    # Format 2: vless.txt (plain VLESS node links) & sub.txt (Base64 subscription)
+    with open('vless.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(vless_lines) + '\n')
+    
+    b64_sub = base64.b64encode('\n'.join(vless_lines).encode('utf-8')).decode('utf-8')
+    with open('sub.txt', 'w', encoding='utf-8') as f:
+        f.write(b64_sub + '\n')
+    print(f'[OK] Generated standard addressesapi.txt with {len(addresses_lines)} clean Anycast nodes.')
+    print(f'[OK] Generated vless.txt & sub.txt with {len(vless_lines)} dual-tier regional nodes.')
 
     # Generate complete clash.yaml for direct import
     clash_content = generate_clash_yaml(clash_nodes, domestic_nodes)
