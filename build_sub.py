@@ -99,42 +99,54 @@ def main():
 
     three_network_nodes = []
     
-    # Pick top CMCC node
+    # Pick top 2 CMCC nodes
+    cmcc_count = 0
     for line in cmcc_raw.splitlines():
         line = line.strip()
         if line and not line.startswith('#'):
             ip = line.split('#')[0].strip()
             ok, rtt = verify_tls(ip, 443)
             if ok:
-                three_network_nodes.append(f"{ip}:443#🇨🇳 移动优选 | 香港/广州低延迟专线 (CMCC)")
-                break
+                cmcc_count += 1
+                three_network_nodes.append(f"{ip}:443#🇨🇳 移动优选-{cmcc_count:02d} | 香港/广州低延迟骨干 (CMCC)")
+                if cmcc_count >= 2:
+                    break
 
-    # Pick top CUCC node
+    # Pick top 2 CUCC nodes
+    cucc_count = 0
     for line in cucc_raw.splitlines():
         line = line.strip()
         if line and not line.startswith('#'):
             ip = line.split('#')[0].strip()
             ok, rtt = verify_tls(ip, 443)
             if ok:
-                three_network_nodes.append(f"{ip}:443#🇨🇳 联通优选 | 圣何塞/AS4837骨干专线 (CUCC)")
-                break
+                cucc_count += 1
+                three_network_nodes.append(f"{ip}:443#🇨🇳 联通优选-{cucc_count:02d} | 圣何塞/AS4837直连骨干 (CUCC)")
+                if cucc_count >= 2:
+                    break
 
-    # Pick top CTCC node
+    # Pick top 2 CTCC nodes
+    ctcc_count = 0
     for line in ctcc_raw.splitlines():
         line = line.strip()
         if line and not line.startswith('#'):
             ip = line.split('#')[0].strip()
             ok, rtt = verify_tls(ip, 443)
             if ok:
-                three_network_nodes.append(f"{ip}:443#🇨🇳 电信优选 | 洛杉矶/163直连骨干 (CTCC)")
-                break
+                ctcc_count += 1
+                three_network_nodes.append(f"{ip}:443#🇨🇳 电信优选-{ctcc_count:02d} | 洛杉矶/163直连骨干 (CTCC)")
+                if ctcc_count >= 2:
+                    break
 
     # Fallbacks if remote download is temporarily unreachable
     if not three_network_nodes:
         three_network_nodes = [
-            "104.19.52.196:443#🇨🇳 移动优选 | 香港/广州低延迟专线 (CMCC)",
-            "172.67.68.127:443#🇨🇳 联通优选 | 圣何塞/AS4837骨干专线 (CUCC)",
-            "104.18.33.8:443#🇨🇳 电信优选 | 洛杉矶/163直连骨干 (CTCC)"
+            "104.19.52.196:443#🇨🇳 移动优选-01 | 香港/广州低延迟骨干 (CMCC)",
+            "104.17.220.222:443#🇨🇳 移动优选-02 | 香港/广州低延迟骨干 (CMCC)",
+            "172.67.68.127:443#🇨🇳 联通优选-01 | 圣何塞/AS4837直连骨干 (CUCC)",
+            "104.26.14.253:443#🇨🇳 联通优选-02 | 圣何塞/AS4837直连骨干 (CUCC)",
+            "104.18.33.8:443#🇨🇳 电信优选-01 | 洛杉矶/163直连骨干 (CTCC)",
+            "104.17.152.131:443#🇨🇳 电信优选-02 | 洛杉矶/163直连骨干 (CTCC)"
         ]
 
     # 2. Ingest Regional Feeds from LancelotRar & CountryMerge
@@ -204,7 +216,7 @@ def main():
             for b_ip, b_port, b_desc in baseline_nodes[code]:
                 if len(found) >= 2:
                     break
-                if any(f[0] == b_ip for f in found):
+                if any(f[0] == b_ip and f[1] == b_port for f in found):
                     continue
                 ok, rtt = verify_tls(b_ip, b_port)
                 if ok:
