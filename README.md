@@ -7,6 +7,7 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 - Automated 4-hour scheduled routing validation across global regions.
 - Zero tracking, 100% serverless static subscription delivery via jsDelivr CDN.
 - Multi-region balanced pool: strictly verified native regional server endpoints.
+- China Mainland low-latency Inbound peering combined with target regional proxyip egress.
 
 ## Endpoints
 
@@ -15,6 +16,7 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 
 ## Status
 
-- Total active balanced regional routes: 26
+- Total active balanced regional routes: 31
+- Inbound: China Mainland and Asia-Optimized low-latency Cloudflare Anycast edge
 - Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
 - Hong Kong and Singapore: Excluded per user policy

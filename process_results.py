@@ -14,15 +14,25 @@ try:
 except Exception:
     pass
 
-# Target countries with regional metadata (Strictly NO HKG, NO SIN)
+# Verified Domestic / China Mainland & Asia-optimized Cloudflare edge IPs
+DOMESTIC_CHINA_CF_SEEDS = [
+    {"ip": "172.64.229.36", "port": 443, "carrier": "电信/通用", "desc": "亚太低延迟优选"},
+    {"ip": "172.64.148.75", "port": 443, "carrier": "电信/通用", "desc": "极速边缘优选"},
+    {"ip": "104.18.34.48", "port": 443, "carrier": "电信/通用", "desc": "大带宽骨干节点"},
+    {"ip": "104.19.39.76", "port": 443, "carrier": "移动", "desc": "移动直连优选"},
+    {"ip": "104.19.158.44", "port": 443, "carrier": "移动/联通", "desc": "三网均衡优选"},
+    {"ip": "104.16.116.229", "port": 443, "carrier": "通用", "desc": "官方Anycast纯净IP"},
+]
+
+# Target regional egress countries (Strictly NO HKG, NO SIN)
 TARGET_CONFIG = [
     {
         'code': 'MO', 'flag': '🇲🇴', 'name': '澳门', 'desc': 'YouTube免广告', 'group': '亚太',
-        'seeds': [('45.202.247.198', 443)]
+        'seeds': [('45.202.247.198', 443), ('45.202.247.198', 8443)]
     },
     {
         'code': 'CH', 'flag': '🇨🇭', 'name': '瑞士', 'desc': '隐私中立', 'group': '欧洲',
-        'seeds': [('82.38.64.162', 443), ('83.228.193.177', 443), ('91.192.102.219', 443)]
+        'seeds': [('82.38.64.162', 443), ('91.192.102.55', 443), ('83.228.193.177', 443)]
     },
     {
         'code': 'LU', 'flag': '🇱🇺', 'name': '卢森堡', 'desc': '金融中心', 'group': '欧洲',
@@ -62,17 +72,57 @@ TARGET_CONFIG = [
     },
     {
         'code': 'JP', 'flag': '🇯🇵', 'name': '日本', 'desc': '东京高速亚太', 'group': '亚太',
-        'seeds': [('150.230.210.96', 443), ('141.147.162.33', 443)]
+        'seeds': [('150.230.210.96', 443), ('138.2.52.92', 443)]
     },
     {
         'code': 'KR', 'flag': '🇰🇷', 'name': '韩国', 'desc': '首尔亚太低延迟', 'group': '亚太',
-        'seeds': [('140.238.30.217', 443), ('131.186.26.94', 443)]
+        'seeds': [('140.238.30.217', 443), ('144.24.86.21', 443)]
     },
     {
         'code': 'US', 'flag': '🇺🇸', 'name': '美国', 'desc': '西雅图骨干', 'group': '美洲',
         'seeds': [('167.172.223.14', 443), ('198.12.120.194', 443)]
     },
 ]
+
+def fetch_live_domestic_ips():
+    """Fetch live speedtest results from mainland China probe APIs"""
+    live_ips = []
+    # 1. Try v2too API
+    try:
+        req = urllib.request.Request('https://ip.v2too.top/api/nodes', headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=4) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            data.sort(key=lambda x: x.get('latency', 999))
+            for item in data[:6]:
+                live_ips.append({
+                    "ip": item["ip"],
+                    "port": 443,
+                    "carrier": item.get("carrier", "通用").upper(),
+                    "desc": f"国内直连实测 {item.get('latency', 60):.0f}ms"
+                })
+    except Exception:
+        pass
+
+    # 2. Try wetest API
+    try:
+        req = urllib.request.Request('https://www.wetest.vip/api/cf2dns/get_cloudflare_ip?key=o1zrmHAF&type=v4', headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=4) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            for isp_key in ['CM', 'CU', 'CT']:
+                nodes = data.get('info', {}).get(isp_key, [])
+                for item in nodes[:2]:
+                    live_ips.append({
+                        "ip": item["ip"],
+                        "port": 443,
+                        "carrier": item.get("line_name", isp_key),
+                        "desc": f"{item.get('line_name', isp_key)}优选 {item.get('rtt_avg', 70)}ms"
+                    })
+    except Exception:
+        pass
+
+    if not live_ips:
+        live_ips = DOMESTIC_CHINA_CF_SEEDS
+    return live_ips
 
 def check_trace_node(ip, port, expected_cc):
     ctx = ssl.create_default_context()
@@ -95,6 +145,7 @@ def check_trace_node(ip, port, expected_cc):
                 info[k.strip()] = v.strip()
         loc = info.get('loc')
         colo = info.get('colo')
+        # Crucial check: loc must strictly match expected country!
         if loc == expected_cc:
             return {'ip': ip, 'port': port, 'latency_ms': round(handshake_ms, 1), 'loc': loc, 'colo': colo}
         return None
@@ -146,22 +197,39 @@ def scan_country_pool(cfg):
     return seeds[:2]
 
 def main():
+    print('[*] Fetching best China mainland / domestic Cloudflare low-latency inbound nodes...')
+    domestic_nodes = fetch_live_domestic_ips()
+    primary_domestic_ip = domestic_nodes[0]['ip']
+    print(f'[+] Best domestic China inbound node: {primary_domestic_ip} ({domestic_nodes[0].get("desc", "低延迟")})')
+
     print('[*] Starting strict cdn-cgi/trace validation across 14 target countries...')
     addresses_lines = []
-    nodes = []
+    clash_nodes = []
 
+    # 1. Add top China Mainland low-latency nodes into addressesapi.txt for domestic fast entry
+    seen_ips = set()
+    for idx, d_node in enumerate(domestic_nodes[:4], 1):
+        if d_node['ip'] not in seen_ips:
+            seen_ips.add(d_node['ip'])
+            addresses_lines.append(f"{d_node['ip']}:{d_node['port']}#⚡ 国内极速优选-{idx:02d} | {d_node['carrier']} {d_node['desc']}")
+
+    # 2. Add strictly verified regional nodes
     for cfg in TARGET_CONFIG:
         cc = cfg['code']
         best_ips = scan_country_pool(cfg)
         for idx, (ip, port) in enumerate(best_ips, 1):
             remark = f"{cfg['flag']} {cfg['name']}-{idx:02d} | {cfg['desc']}"
-            line = f"{ip}:{port}#{remark}"
-            addresses_lines.append(line)
+            
+            # Format A for addressesapi.txt: Standard IP:port#remark
+            addresses_lines.append(f"{ip}:{port}#{remark}")
 
-            nodes.append({
+            # Format B for clash.yaml: Dual-tier routing
+            # Inbound server = China low-latency Cloudflare IP (e.g. 172.64.229.36)
+            # Outbound path = /?proxyip=<ip>:<port>&ed=2048 (routes to regional proxyip)
+            clash_nodes.append({
                 'name': remark,
-                'server': ip,
-                'port': port,
+                'server': primary_domestic_ip,
+                'port': 443,
                 'type': 'vless',
                 'uuid': os.environ.get('CF_UUID', '30e9c5c8-ed28-4cd9-b008-dc67277f8b02'),
                 'cipher': 'auto',
@@ -169,7 +237,7 @@ def main():
                 'servername': os.environ.get('CF_HOST', 'edgetunnel.pages.dev'),
                 'network': 'ws',
                 'ws-opts': {
-                    'path': '/?ed=2048',
+                    'path': f"/?proxyip={ip}:{port}&ed=2048",
                     'headers': {
                         'Host': os.environ.get('CF_HOST', 'edgetunnel.pages.dev')
                     }
@@ -180,18 +248,20 @@ def main():
             })
         print(f"  [+] {cfg['flag']} {cfg['name']} ({cc}): {len(best_ips)} strictly verified nodes selected.")
 
+    # Save addressesapi.txt
     with open('addressesapi.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(addresses_lines) + '\n')
     print(f'[OK] Generated standard addressesapi.txt with {len(addresses_lines)} nodes.')
 
-    clash_content = generate_clash_yaml(nodes)
+    # Generate complete clash.yaml for direct import
+    clash_content = generate_clash_yaml(clash_nodes, domestic_nodes[:2])
     with open('clash.yaml', 'w', encoding='utf-8') as f:
         f.write(clash_content)
-    print(f'[OK] Generated clash.yaml with {len(nodes)} nodes.')
+    print(f'[OK] Generated clash.yaml with {len(clash_nodes)} nodes.')
 
     update_readme(len(addresses_lines))
 
-def generate_clash_yaml(nodes):
+def generate_clash_yaml(nodes, domestic_nodes):
     node_names = [n['name'] for n in nodes]
     macau_names = [n['name'] for n in nodes if n['country'] == 'MO']
     eu_names = [n['name'] for n in nodes if n['group'] == '欧洲']
@@ -314,6 +384,7 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 - Automated 4-hour scheduled routing validation across global regions.
 - Zero tracking, 100% serverless static subscription delivery via jsDelivr CDN.
 - Multi-region balanced pool: strictly verified native regional server endpoints.
+- China Mainland low-latency Inbound peering combined with target regional proxyip egress.
 
 ## Endpoints
 
@@ -323,6 +394,7 @@ A lightweight, automated multi-region network diagnostic and routing optimizatio
 ## Status
 
 - Total active balanced regional routes: {node_count}
+- Inbound: China Mainland and Asia-Optimized low-latency Cloudflare Anycast edge
 - Regions: Macau, Switzerland, Luxembourg, France, Germany, Netherlands, United Kingdom, Sweden, Poland, Australia, Canada, Japan, South Korea, United States
 - Hong Kong and Singapore: Excluded per user policy
 """
