@@ -217,7 +217,9 @@ def main():
 
             ok, rtt = verify_tls(ip, port)
             if ok:
-                desc = f"{geo.get('city', all_target_countries[code]['name'])} {geo.get('isp', '')}".strip()
+                city = geo.get('city', all_target_countries[code]['name'])
+                isp = geo.get('isp', '').replace(' HK Limited', '').replace(' HK', '').strip()
+                desc = f"{city} {isp}".strip()
                 found.append((ip, port, desc))
             time.sleep(0.15)
 
