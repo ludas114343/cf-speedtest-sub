@@ -49,7 +49,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇱🇺 卢森堡-02 | 欧洲金融核心"
     type: vless
-    server: 104.16.14.88
+    server: 172.67.150.33
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -63,7 +63,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇫🇷 法国-01 | 巴黎欧洲核心"
     type: vless
-    server: 104.18.55.90
+    server: 172.67.72.110
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -77,7 +77,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇫🇷 法国-02 | 巴黎欧洲核心"
     type: vless
-    server: 172.67.72.110
+    server: 104.18.55.90
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -91,7 +91,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇩🇪 德国-01 | 法兰克福骨干"
     type: vless
-    server: 104.26.0.0
+    server: 104.16.170.90
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -105,7 +105,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇩🇪 德国-02 | 法兰克福骨干"
     type: vless
-    server: 104.24.0.2
+    server: 104.18.172.45
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -119,7 +119,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
     type: vless
-    server: 188.114.96.7
+    server: 104.16.175.95
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -133,7 +133,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
     type: vless
-    server: 104.18.177.110
+    server: 104.20.0.7
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -146,6 +146,20 @@ proxies:
       headers:
         Host: edgetunnel.pages.dev
   - name: "🇬🇧 英国-01 | 伦敦低延迟"
+    type: vless
+    server: 104.18.187.25
+    port: 443
+    uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
+    network: ws
+    tls: true
+    udp: true
+    sni: edgetunnel.pages.dev
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2560"
+      headers:
+        Host: edgetunnel.pages.dev
+  - name: "🇬🇧 英国-02 | 伦敦低延迟"
     type: vless
     server: 104.16.185.10
     port: 443
@@ -175,7 +189,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
     type: vless
-    server: 104.16.210.60
+    server: 104.18.212.75
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -189,7 +203,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇵🇱 波兰-01 | 华沙东欧骨干"
     type: vless
-    server: 104.18.217.85
+    server: 104.16.215.70
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -203,7 +217,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇵🇱 波兰-02 | 华沙东欧骨干"
     type: vless
-    server: 104.16.215.70
+    server: 104.18.217.85
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -217,7 +231,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇦🇺 澳大利亚-01 | 悉尼大洋洲专线"
     type: vless
-    server: 104.16.70.35
+    server: 104.18.80.44
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -259,7 +273,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇨🇦 加拿大-02 | 多伦多北美直连"
     type: vless
-    server: 104.16.90.30
+    server: 104.18.92.45
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -287,7 +301,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇯🇵 日本-02 | 东京亚太优化"
     type: vless
-    server: 108.162.198.2
+    server: 104.18.122.55
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -329,7 +343,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇺🇸 美国-01 | 西海岸直连骨干"
     type: vless
-    server: 104.19.0.6
+    server: 104.18.0.7
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -343,7 +357,7 @@ proxies:
         Host: edgetunnel.pages.dev
   - name: "🇺🇸 美国-02 | 西海岸直连骨干"
     type: vless
-    server: 104.16.150.70
+    server: 104.19.0.6
     port: 443
     uuid: 30e9c5c8-ed28-4cd9-b008-dc67277f8b02
     network: ws
@@ -375,6 +389,7 @@ proxy-groups:
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
+      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
       - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
       - "🇵🇱 波兰-01 | 华沙东欧骨干"
@@ -408,6 +423,7 @@ proxy-groups:
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
+      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
       - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
       - "🇵🇱 波兰-01 | 华沙东欧骨干"
@@ -437,6 +453,7 @@ proxy-groups:
       - "🇳🇱 荷兰-01 | 阿姆斯特丹极速"
       - "🇳🇱 荷兰-02 | 阿姆斯特丹极速"
       - "🇬🇧 英国-01 | 伦敦低延迟"
+      - "🇬🇧 英国-02 | 伦敦低延迟"
       - "🇸🇪 瑞典-01 | 斯德哥尔摩北欧"
       - "🇸🇪 瑞典-02 | 斯德哥尔摩北欧"
       - "🇵🇱 波兰-01 | 华沙东欧骨干"
