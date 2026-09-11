@@ -7,7 +7,7 @@ Automated multi-region subscription feed scraped from tested community GitHub pr
 - **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status
-- **Last Updated**: `2026-09-10 22:03:15 UTC`
+- **Last Updated**: `2026-09-11 01:57:56 UTC`
 - **Coverage**: European Union / Europe (15 countries), Canada, Oceania (Australia, New Zealand), South America (2 nodes), Africa (2 nodes).
 - **Strictly BANNED**: ZERO US (美国), ZERO HK (香港), ZERO JP (日本), ZERO KR (韩国), ZERO CN (中国), ZERO SG (新加坡), ZERO MO (澳门), ZERO TW (台湾).
 - **EdgeTunnel Native Syntax**: ZERO vertical pipes, ZERO commas, 100% compatible with EdgeTunnel ADDAPI parser.
