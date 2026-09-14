@@ -7,7 +7,7 @@ Automated multi-region subscription feed aggregated from active domestic speedte
 - **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status & Architecture
-- **Last Updated**: `2026-09-14 13:00:12 UTC` (`2026-09-14 21:00:12 CST`)
+- **Last Updated**: `2026-09-14 13:00:35 UTC` (`2026-09-14 13:00:35 CST`)
 - **Coverage**: European Union / Europe (15 countries, 30 nodes), Canada (2 nodes), Oceania (3 nodes), South America (2 nodes), Africa (2 nodes) - Total 39 nodes.
 - **Domestic Probe Sourcing**: Real domestic measurements from China Mobile, Telecom, and Unicom probes (`svip-s`, `lirong894`, `chanriver`, `meroseem`, `love-ztm`, `HandsomeMJZ`).
 - **Speed & Quality Filtering**: Zero `0.0Mbps` / `0M` dead nodes, full TCP liveness validation before committing.
@@ -20,7 +20,7 @@ Automated multi-region subscription feed aggregated from active domestic speedte
 | Region / Country | Primary Preferred Node | Secondary Preferred Node | Probe Source |
 | **🌍 欧洲 / 欧盟国家 (15国 x 2节点)** | | | |
 | :--- | :--- | :--- | :--- |
-| 🇳🇱 荷兰 (`NL`) | `89.106.207.108:443` (166.5ms, 5.7M) | `172.233.46.205:443` (184.3ms, 0.1M) | `chanriver` |
+| 🇳🇱 荷兰 (`NL`) | `172.233.46.205:443` (184.3ms, 0.1M) | `213.188.223.161:443` (189.1ms, 5.7M) | `chanriver` |
 | 🇬🇧 英国 (`GB`) | `185.169.234.13:8443` (213.7ms, 0.1M) | `167.99.80.243:8443` (214.2ms, 5.7M) | `chanriver` |
 | 🇸🇪 瑞典 (`SE`) | `62.182.193.175:443` (210.4ms, 5.9M) | `13.140.10.28:2087` (211.9ms, 0.2M) | `lirong894` |
 | 🇵🇱 波兰 (`PL`) | `145.239.85.117:8443` (210.5ms, 0.4M) | `91.108.237.23:443` (211.1ms, 1.3M) | `lirong894` |
