@@ -7,7 +7,7 @@ Automated multi-region subscription feed built exclusively on genuine Cloudflare
 - **jsDelivr Fast Mirror**: `https://cdn.jsdelivr.net/gh/ludas114343/cf-speedtest-sub@main/addressesapi.txt`
 
 ## Status & Architecture
-- **Last Updated**: `2026-09-25 16:06:17 UTC` (`2026-09-25 16:06:17 CST`)
+- **Last Updated**: `2026-09-25 22:55:44 UTC` (`2026-09-25 22:55:44 CST`)
 - **Coverage**: European Union / Europe (15 countries, 30 nodes), Canada (2 nodes), Oceania (3 nodes), South America (2 nodes), Africa (2 nodes) - Total 39 nodes.
 - **Genuine Cloudflare Anycast**: 100% official Cloudflare AS13335 Anycast CIDR blocks (`104.16.0.0/12`, `172.64.0.0/13`, `188.114.96.0/20`, `162.159.0.0/16`).
 - **Zero Third-Party VPSs**: Banned all foreign Unicast reverse proxies (xTom, IT7, Hetzner, etc.) that caused 1000ms+ round-trip delays.
